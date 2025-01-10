@@ -9,9 +9,14 @@
 <body>
     <div class="container">
         <h2>Register</h2>
+        <!-- Display alert message -->
+        <div th:if="${message}" class="alert">
+            <p th:text="${message}"></p>
+        </div>
         <form action="/submit_registration" method="post">
             <input type="text" name="username" placeholder="Username" required>
             <input type="email" name="email" placeholder="Email" required>
+            <input type="text" name="telephone" placeholder="Telephone" required>
             <input type="password" name="password" placeholder="Password" required>
             <input type="submit" value="Register">
         </form>

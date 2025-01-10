@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Validation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Enter Validation Code</h2>
+        <!-- Display alert message -->
+        <div th:if="${message}" class="alert">
+            <p th:text="${message}"></p>
+        </div>
+        <form action="/submit_code" method="post">
+            <input type="text" name="code" placeholder="Validation Code" required>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+</body>
+</html>

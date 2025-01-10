@@ -10,14 +10,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-
 @Controller
 @RequestMapping("/crypto")
 public class CryptoController {
     @RequestMapping("/chart")
     public String chart(Model m) throws Exception {
-        List<Crypto> cryptos = new Crypto().mock();
+        List<Crypto> cryptos = new Crypto().FindAll();
         m.addAttribute("cryptos", cryptos);
         return "chart_crypto";
     }
@@ -26,7 +24,7 @@ public class CryptoController {
     @ResponseBody
     public Map<String, Double> getValues() throws Exception {
         Map<String, Double> values = new HashMap<>();
-        List<Crypto> ls=new Crypto().mock();
+        List<Crypto> ls=new Crypto().FindAll();
         for (Crypto crypto : ls) {
             values.put(crypto.getNomCrypto(), crypto.getValue());
         }

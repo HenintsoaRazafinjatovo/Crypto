@@ -1,3 +1,6 @@
+CREATE DATABASE crypto;
+\c crypto;
+
 CREATE TABLE cryptomonnaie(
    id_cryptomonnaie SERIAL,
    nom_crypto VARCHAR(50)  NOT NULL,

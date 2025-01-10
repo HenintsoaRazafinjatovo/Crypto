@@ -50,7 +50,7 @@ public class StockFondUser {
         this.fondTotal = fondTotal;
     }
 
-    public List<StockFondUser> GetAllByIdUser(int idUser){
+    public List<StockFondUser> GetAllByIdUser(int idUser) throws Exception{
         List<StockFondUser> stockFonds = new ArrayList<>();
         String query="SELECT * FROM vue_crypto_par_utilisateur WHERE id_user = ?";
         UtilDb utilDb = new UtilDb();
@@ -73,6 +73,7 @@ public class StockFondUser {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return stockFonds;
     }
 
     

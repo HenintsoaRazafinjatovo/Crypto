@@ -1,6 +1,6 @@
 package mg.crypto.models;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
 import mg.crypto.connect.GenericDao;
 import mg.crypto.connect.UtilDb;

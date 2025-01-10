@@ -22,8 +22,4 @@ public class PorteFeuilleController {
         return "porteFeuille";
     }
 
-    @GetMapping("/venteCrypto")
-    public String venteCrypto(Model model)throws Exception{
-        
-    }
 }

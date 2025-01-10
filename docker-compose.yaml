@@ -10,10 +10,10 @@ services:
   projDB:
     build: ./postgresDocker/
     ports:
-      - "5432:5432"
+      - "5433:5433"
     restart: always
     networks:
-      - reseau
+      - reseauProj
     volumes:
       - db-dataProj:/var/lib/postgresql/data
 volumes:

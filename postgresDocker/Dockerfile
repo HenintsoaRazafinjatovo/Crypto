@@ -10,4 +10,4 @@ ENV POSTGRES_DB=crypto
 COPY init.sql /docker-entrypoint-initdb.d/
 
 # Exposer le port par défaut de PostgreSQL
-EXPOSE 5432
+EXPOSE 5433

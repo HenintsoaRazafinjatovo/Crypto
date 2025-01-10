@@ -1,5 +1,7 @@
 <%  %>
 <jsp:include page="template/header.jsp" />
+<%@ page import="mg.crypto.models.MvtFond" %>
+<%@ page import="java.util.List" %>
 <h1 class="uk-h1">Liste des transactions</h1>
 <br />
 <div class="uk-card uk-card-body uk-card-default">
@@ -27,8 +29,7 @@
     </tr>
   </thead>
   <tbody>
-    <%  %>
-    <% for()  {%>
+    <% for(MvtFond mvt : (List<MvtFond>)request.getAttribute("lmvt"))  {%>
     <tr>
     
     

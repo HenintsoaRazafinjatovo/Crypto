@@ -1,6 +1,6 @@
 package mg.crypto.models;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,8 +11,10 @@ import java.util.List;
 import mg.crypto.connect.GenericDao;
 import mg.crypto.connect.UtilDb;
 import mg.crypto.utils.AnnotationAttribut;
+import mg.crypto.utils.AnnotationClass;
 import mg.crypto.utils.Identite;
 
+@AnnotationClass(tableName = "mvt_fond")
 public class MvtFond  {
 
     @Identite(colName = "id_client")
@@ -60,8 +62,8 @@ public class MvtFond  {
         this.retrait = retrait;
     }
 
-    public void setDtMvt(Timestamp dtMvt) {
-        this.dtMvt = dtMvt;
+    public void setDtMvt(java.sql.Timestamp timestamp) {
+        this.dtMvt = timestamp;
     }
 
     public double getDepot() {
@@ -100,7 +102,7 @@ public class MvtFond  {
 
         
 
-    public List<MvtFond>findAll() throws Exception
+    public List<MvtFond> findAll() throws Exception
         {
             GenericDao dao= new GenericDao(new UtilDb());
             List<Object> list=dao.findAll(new MvtFond());
@@ -118,9 +120,10 @@ public class MvtFond  {
             f.setIdUser(id);
             List<MvtFond> obj= new ArrayList<>();
             List<Object> mvt= dao.findAllWithCriteria(f);
-            for (Object mvtFond : obj) {
+            for (Object mvtFond : mvt) {
                 ((MvtFond)mvtFond).setTypeMvt();
-                mvt.add((MvtFond)mvtFond);
+                obj.add((MvtFond)mvtFond);
+                System.out.println(((MvtFond)mvtFond).getTypeMvt());
             }
             return obj;
         }
@@ -140,7 +143,7 @@ public class MvtFond  {
             return montant;
         }
 
-    public boolean checkFond() {
+    public boolean checkFond() throws Exception {
         boolean isSufficient = false;
         String mvt="Retrait";
         if (this.getTypeMvt().equals(mvt)) {
@@ -165,7 +168,7 @@ public class MvtFond  {
         return isSufficient;
     }
 
-    public void AugmentationFond(){
+    public void AugmentationFond() throws Exception{
         String mvt="Depot";
         if (this.getTypeMvt().equals(mvt)){
             this.setRetrait(0);
@@ -174,7 +177,7 @@ public class MvtFond  {
         }
     }
 
-    public void FaireRetrait(){
+    public void FaireRetrait() throws Exception{
         String mvt="Retrait";
         if (this.getTypeMvt().equals(mvt) && this.checkFond()) {
             this.setDepot(0);

@@ -91,7 +91,7 @@
                   </svg></uk-icon> </span>
               Table
             </a> </li>
-          <li> <a class="font-medium" href="https://examples.franken-ui.dev/examples/music#demo" uk-toggle=""
+          <li> <a class="font-medium" href="/etatFond" uk-toggle=""
               role="button"> <span class="mr-2 size-4"> <uk-icon icon="radio"><!----><svg
                     xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="">
@@ -101,14 +101,14 @@
                     <path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"></path>
                     <path d="M19.1 4.9C23 8.8 23 15.1 19.1 19"></path>
                   </svg></uk-icon> </span>
-              Radio
+              etatFond
             </a> </li>
         </ul>
       </div>
       <div class="px-3 py-2">
         <h2 class="mb-2 px-3 text-lg font-semibold tracking-tight">Library</h2>
         <ul class="uk-nav uk-nav-secondary">
-          <li> <a class="font-medium" href="https://examples.franken-ui.dev/examples/music#demo" uk-toggle=""
+          <li> <a class="font-medium" href="/ajoutFond" uk-toggle=""
               role="button"> <span class="mr-2 size-4"> <uk-icon icon="list-music"><!----><svg
                     xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="">
@@ -118,7 +118,7 @@
                     <path d="M16 6H3"></path>
                     <path d="M12 18H3"></path>
                   </svg></uk-icon> </span>
-              Playlists
+              depot/retrait
             </a> </li>
           <li> <a class="font-medium" href="https://examples.franken-ui.dev/examples/music#demo" uk-toggle=""
               role="button"> <span class="mr-2 size-4"> <uk-icon icon="music-2"><!----><svg

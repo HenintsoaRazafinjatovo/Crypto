@@ -6,6 +6,6 @@ public class TestController {
     @GetMapping("/")
     public String home()
     {
-        return "form";
+        return "redirect:/vente/form";
     }
 }

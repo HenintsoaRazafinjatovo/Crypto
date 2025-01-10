@@ -1,0 +1,22 @@
+services:
+  proj:
+    build: .
+    ports:
+      - "5005:5005"
+    depends_on:
+      - proj
+    networks:
+      - reseau
+  proj:
+    build: ./postgresDocker/
+    ports:
+      - "5432:5432"
+    restart: always
+    networks:
+      - reseau
+    volumes:
+      - db-data:/var/lib/postgresql/data
+volumes:
+  db-data:
+networks:
+  reseau:

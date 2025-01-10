@@ -1,5 +1,3 @@
-CREATE DATABASE crypto;
-\c crypto;
 
 CREATE TABLE cryptomonnaie(
    id_cryptomonnaie SERIAL,

@@ -21,4 +21,9 @@ public class PorteFeuilleController {
         model.addAttribute("fondUsers",fondUsers);
         return "porteFeuille";
     }
+
+    @GetMapping("/venteCrypto")
+    public String venteCrypto(Model model)throws Exception{
+        
+    }
 }

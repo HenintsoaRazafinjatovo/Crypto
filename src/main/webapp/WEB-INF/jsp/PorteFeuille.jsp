@@ -13,15 +13,18 @@
   </thead>
   <tbody>
     <tr>
-    <c:forEach var="crypto" items="${stockCryptos}">
-      <td>${crypto.nomCrypto}</td>
-      <td>${crypto.totalQuantite}</td>
-      <td>
-        <button class="uk-btn uk-btn-default" type="button">
-            Vente
-        </button>
-      </td>
-    </c:forEach>
+    <form action="/venteCrypto" method="post">
+        <c:forEach var="crypto" items="${stockCryptos}">
+        <input type="hidden" name="idCrypto" value="${crypto.idCrypto}">
+        <td>${crypto.nomCrypto}</td>
+        <td>${crypto.totalQuantite}</td>
+        <td>
+            <button class="uk-btn uk-btn-default" type="button">
+                Vente
+            </button>
+        </td>
+        </c:forEach>
+    </form>
     </tr>
   </tbody>
 </table>

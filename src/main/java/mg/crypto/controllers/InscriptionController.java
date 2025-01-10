@@ -23,7 +23,7 @@ public class InscriptionController {
 
     @GetMapping("/inscription")
     public String home() {
-        return "inscription"; // Assurez-vous que "inscription" correspond au nom de votre fichier HTML sans l'extension
+        return "login/inscription"; // Assurez-vous que "inscription" correspond au nom de votre fichier HTML sans l'extension
     }
 
     @PostMapping("/submit_registration")
@@ -39,7 +39,7 @@ public class InscriptionController {
         user.setTelephone(telephone);
         user.setPassword(password);
 
-        String apiUrl = "http://localhost:5005/api/register/register";
+        String apiUrl = "http://localhost:5005/api/Register";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<User> request = new HttpEntity<>(user, headers);
@@ -47,11 +47,12 @@ public class InscriptionController {
         ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.POST, request, String.class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
-            redirectAttributes.addFlashAttribute("message", "Registration successful!");
-            return "redirect:/connexion";
+            redirectAttributes.addFlashAttribute("message", "Votre mail a ete envoye!");
+            return "redirect:/login";
         } else {
             redirectAttributes.addFlashAttribute("message", "Registration failed: " + response.getBody());
         }
         return "redirect:/inscription";
     }
+
 }

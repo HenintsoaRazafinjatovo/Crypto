@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -20,40 +21,19 @@ public class LoginController {
     @Autowired
     private RestTemplate restTemplate;
 
-    @PostMapping("/submit_login")
-    public String submitLogin(@RequestParam("email") String email,
-                              @RequestParam("password") String password,
-                              RedirectAttributes redirectAttributes,
-                              Model model) {
-        String url = "http://localhost:5000/api/loginController/auth";
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        String requestJson = String.format("{\"email\":\"%s\", \"password\":\"%s\"}", email, password);
-        HttpEntity<String> entity = new HttpEntity<>(requestJson, headers);
-
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
-
-        if (response.getStatusCode().is2xxSuccessful()) {
-            String responseBody = response.getBody();
-            if (responseBody != null && responseBody.contains("votre pin a ete envoyé")) {
-                return "redirect:/codevalidation";
-            } else {
-                model.addAttribute("message", "Login successful!");
-                return "success";
-            }
-        } else {
-            model.addAttribute("message", "Login failed: " + response.getBody());
-            return "error";
-        }
+    @GetMapping("/login")
+    public String home() {
+        return "login/connexion"; // Assurez-vous que "inscription" correspond au nom de votre fichier HTML sans l'extension
     }
-
+    @GetMapping("/pin")
+    public String code() {
+        return "login/codeValidation"; // Assurez-vous que "inscription" correspond au nom de votre fichier HTML sans l'extension
+    }
     @PostMapping("/submit_code")
     public String submitCode(@RequestParam("idUser") int idUser,
                              @RequestParam("code") String code,
                              Model model) {
-        String url = "http://localhost:5005/api/logincontroller/codeValidation";
+        String url = "http://localhost:5005/api/login/codeValidation";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

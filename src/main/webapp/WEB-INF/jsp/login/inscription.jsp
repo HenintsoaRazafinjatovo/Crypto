@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration Page</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
     <div class="container">
@@ -20,6 +20,7 @@
             <input type="password" name="password" placeholder="Password" required>
             <input type="submit" value="Register">
         </form>
+        <p>have an account? <a href="/login">CONNECT here</a></p>
     </div>
 </body>
 </html>

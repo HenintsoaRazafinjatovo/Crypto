@@ -21,9 +21,9 @@ public class UtilDb {
     // Constructeur//
     public UtilDb() {
         this.setDrivername("org.postgresql.Driver");
-        this.setUrl("jdbc:postgresql://localhost:5432/yourDatabase");
-        this.setUser("");
-        this.setPassword("");
+        this.setUrl("jdbc:postgresql://localhost:5432/crypto");
+        this.setUser("postgres");
+        this.setPassword("postgres");
         this.setSqlType("postgres");
     }
 

@@ -4,10 +4,10 @@ services:
     ports:
       - "5005:5005"
     depends_on:
-      - proj
+      - projDB
     networks:
-      - reseau
-  proj:
+      - reseauProj
+  projDB:
     build: ./postgresDocker/
     ports:
       - "5432:5432"
@@ -15,8 +15,8 @@ services:
     networks:
       - reseau
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - db-dataProj:/var/lib/postgresql/data
 volumes:
-  db-data:
+  db-dataProj:
 networks:
-  reseau:
+  reseauProj:

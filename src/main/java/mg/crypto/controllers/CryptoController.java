@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,11 +23,11 @@ public class CryptoController {
 
     @RequestMapping("/getValues")
     @ResponseBody
-    public Map<String, Double> getValues() throws Exception {
-        Map<String, Double> values = new HashMap<>();
+    public Map<String, BigDecimal> getValues() throws Exception {
+        Map<String, BigDecimal> values = new HashMap<>();
         List<Crypto> ls=new Crypto().FindAll();
         for (Crypto crypto : ls) {
-            values.put(crypto.getNomCrypto(), crypto.getValue());
+            values.put(crypto.getNomCrypto(), crypto.getValInitial());
         }
         return values;
     }

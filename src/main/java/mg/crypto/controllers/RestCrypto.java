@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,11 +20,11 @@ import java.util.Random;
 public class RestCrypto {
     @RequestMapping("/rest/crypto")
     public List<Crypto> chart() throws Exception {
-        List<Crypto> cryptos = new Crypto().mock();
+        List<Crypto> cryptos = new Crypto().FindAll();
         return cryptos;
     }
     @PutMapping("/rest/crypto/update")
-    public void update(@RequestParam("id") int idCrypto, @RequestParam("val") double val) throws Exception {
+    public void update(@RequestParam("id") int idCrypto, @RequestParam("val") BigDecimal val) throws Exception {
         Crypto crypto = new Crypto().findById(idCrypto);
         crypto.setValInitial(val);
         crypto.update();

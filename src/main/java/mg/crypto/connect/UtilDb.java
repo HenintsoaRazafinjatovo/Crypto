@@ -1,9 +1,6 @@
 package mg.crypto.connect;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.*;
-import java.util.Properties;
 
 public class UtilDb {
     String drivername;

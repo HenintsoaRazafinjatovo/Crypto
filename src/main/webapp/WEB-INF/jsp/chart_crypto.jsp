@@ -4,11 +4,30 @@
 <br/>
 
 <div class="uk-card uk-card-body uk-card-default">
-<select id="cryptoSelect" class="uk-select">
-  <option value="all">Toutes les cryptomonnaies</option>
-</select>
-<canvas id="myChart" width="400" height="200"></canvas>
+  <select id="cryptoSelect" class="uk-select">
+    <option value="all">Toutes les cryptomonnaies</option>
+  </select>
+  <canvas id="myChart" width="400" height="200"></canvas>
+  <br/>
 </div>
+<br/>
+<h2 class="uk-h1">Liste des Cryptomonnaies</h2>
+<br/>
+<div class="uk-card uk-card-body uk-card-default">
+  <table class="uk-table uk-table-middle uk-table-divider" id="cryptoTable">
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Valeur</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Les lignes seront ajoutées dynamiquement -->
+    </tbody>
+  </table>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -50,7 +69,7 @@
             historicalData[crypto.nomCrypto] = []; // Initialiser les données historiques
             select.append(new Option(crypto.nomCrypto, crypto.nomCrypto));
           });
-          updateChart()
+          updateChart();
           myChart.update();
         }
       });
@@ -79,20 +98,24 @@
       });
     }
 
-    $('#cryptoSelect').change(function() {
-      var selectedCrypto = $(this).val();
-      myChart.data.datasets.forEach((dataset) => {
-        var cryptoName = dataset.label.replace('Prix du ', '');
-        dataset.data = historicalData[cryptoName].map((value, index) => {
-          if (selectedCrypto === 'all' || cryptoName === selectedCrypto) {
-            return value;
-          } else {
-            return null; // Ajoute une valeur nulle pour maintenir l'alignement des labels
-          }
-        });
+    function updateCryptoTable() {
+      $.ajax({
+        url: '/rest/crypto',
+        method: 'GET',
+        success: function(response) {
+          var tableBody = $('#cryptoTable tbody');
+          tableBody.empty(); // Vider le tableau avant de le remplir
+          response.forEach(function(crypto) {
+            var row = '<tr>' +
+              '<td>' + crypto.nomCrypto + '</td>' +
+              '<td>' + crypto.valInitial + '</td>' +
+              '<td><button class="uk-btn uk-btn-default">Acheter</button></td>' +
+              '</tr>';
+            tableBody.append(row);
+          });
+        }
       });
-      myChart.update();
-    });
+    }
 
     function getRandomColor(opacity) {
       var r = Math.floor(Math.random() * 255);
@@ -103,7 +126,9 @@
 
     initializeDatasets();
     setInterval(updateChart, 10000); // Mettre à jour toutes les 10 secondes
+    setInterval(updateCryptoTable, 10000); // Mettre à jour le tableau toutes les 10 secondes
     updateChart(); // Mettre à jour immédiatement au chargement de la page
+    updateCryptoTable(); // Mettre à jour immédiatement au chargement de la page
   });
 </script>
 

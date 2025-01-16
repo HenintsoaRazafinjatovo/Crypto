@@ -6,6 +6,7 @@
     <title>Login Page</title>
     <link rel="stylesheet" href="/assets/style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/apiConfig.js"></script>
 </head>
 <body>
     <div class="container">
@@ -27,9 +28,12 @@
                     email: $('input[name="email"]').val(),
                     password: $('input[name="password"]').val()
                 };
+                var $submitButton = $('input[type="submit"]');
+                $submitButton.prop('disabled', true); // Désactiver le bouton
+                $submitButton.css('background-color', 'grey'); // Griser le bouton
 
                 $.ajax({
-                    url: 'http://localhost:5005/api/login',
+                    url: API_BASE_URL + '/login',
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(formData),
@@ -42,6 +46,10 @@
                     error: function(xhr, status, error) {
                         // Gérer les erreurs
                         alert('Login failed: ' + xhr.responseText);
+                    },
+                    complete: function() {
+                        $submitButton.prop('disabled', false); // Réactiver le bouton
+                        $submitButton.css('background-color', ''); // Restaurer la couleur d'origine
                     }
                 });
             });

@@ -1,3 +1,6 @@
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -119,15 +122,6 @@
                     <path d="M12 18H3"></path>
                   </svg></uk-icon> </span>
               depot/retrait
-            </a> </li>
-          <li> <a class="font-medium" href="https://examples.franken-ui.dev/examples/music#demo" uk-toggle=""
-              role="button"> <span class="mr-2 size-4"> <uk-icon icon="music-2"><!----><svg
-                    xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="">
-                    <circle cx="8" cy="18" r="4"></circle>
-                    <path d="M12 18V2l7 4"></path>
-                  </svg></uk-icon> </span>
-              Songs
             </a> </li>
           <li> <a class="font-medium" href="https://examples.franken-ui.dev/examples/music#demo" uk-toggle=""
               role="button"> <span class="mr-2 size-4"> <uk-icon icon="user"><!----><svg

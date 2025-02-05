@@ -1,5 +1,6 @@
 package mg.crypto.models;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,17 @@ public class MvtFond  {
 
     @AnnotationAttribut(colName = "dt_mvt",insert = true)
     Timestamp dtMvt;
+
+    @AnnotationAttribut(colName = "etat",insert = true)
+    boolean etat;
+
+    public void setEtat(boolean etat) {
+        this.etat = etat;
+    }
+
+    public boolean getEtat(){
+        return etat;
+    }
 
     String typeMvt;
     public String getTypeMvt() {
@@ -77,10 +89,17 @@ public class MvtFond  {
         this.retrait = retrait;
     }
 
+    public void setRetrait(BigDecimal decimal) {
+        this.retrait=decimal.doubleValue();
+    }
+
     public void setDtMvt(Timestamp dtMvt) {
         this.dtMvt = dtMvt;
     }
 
+    public void setDepot(BigDecimal decimal) {
+        this.depot=decimal.doubleValue();
+    }
     public double getDepot() {
         return depot;
     }
@@ -133,16 +152,18 @@ public class MvtFond  {
                 f.setIdUser(id);
                 List<MvtFond> obj= new ArrayList<>();
                 List<Object> mvt= dao.findAllWithCriteria(f);
-                for (Object mvtFond : obj) {
+                for (Object mvtFond : mvt) {
                     ((MvtFond)mvtFond).setTypeMvt();
-                    mvt.add((MvtFond)mvtFond);
+                    ((MvtFond)mvtFond).setMontant();
+
+                    obj.add((MvtFond)mvtFond);
                 }
                 return obj;
             }
         
         public void insert() throws Exception{
             GenericDao dao= new GenericDao(new UtilDb());
-            dao.save(dao);
+            dao.save(this);
         }
 
         public double getFondRestant() throws Exception
@@ -150,7 +171,7 @@ public class MvtFond  {
                double montant=0;
                List<MvtFond> fonds =this.findById(this.getIdUser());
                 for ( MvtFond fond : fonds) {
-                        montant+=fond.getFondRestant()-fond.getRetrait();
+                        montant+=fond.getDepot()-fond.getRetrait();
                 }
                 return montant;
             }

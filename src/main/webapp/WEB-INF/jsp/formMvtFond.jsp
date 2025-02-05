@@ -9,6 +9,7 @@
       <select
         class="uk-input"
         id="typemvt"
+        name="typemvt"
         type="number"
       >
         <option value="1">depot</option>
@@ -22,6 +23,7 @@
      <input
         class="uk-input"
         id="montantmvt"
+        name="montantmvt"
         type="number"
         placeholder="montant">
   </div>

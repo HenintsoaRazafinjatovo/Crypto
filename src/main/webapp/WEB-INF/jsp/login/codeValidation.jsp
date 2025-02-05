@@ -38,8 +38,19 @@
                         // Gérer la réponse de succès
                         $('#alertMessage').show();
                         $('#alertText').text('Code validation successful!');
-                        // Rediriger vers une autre page si nécessaire
-                        window.location.href = '/vente/form';
+                        $.ajax({
+                            url: 'http://localhost:8080/session/set',
+                            type: 'GET',
+                            data: { idUser: response.userId },
+                            success: function() {
+                                console.log('Session set successfully');
+                                // Rediriger vers une autre page si nécessaire
+                                window.location.href = '/vente/form';
+                            },
+                            error: function(xhr, status, error) {
+                                console.log('Failed to set session: ' + xhr.responseText);
+                            }
+                        });
                     },
                     error: function(xhr, status, error) {
                         // Gérer les erreurs

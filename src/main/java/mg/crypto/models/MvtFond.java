@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
 import mg.crypto.connect.GenericDao;
 import mg.crypto.connect.UtilDb;
@@ -188,6 +189,60 @@ public class MvtFond  {
         }
     }
 
+    public List<MvtFond> getAllFondsBeforeDate(Date date) throws Exception {
+        List<MvtFond> fonds = new ArrayList<>();
+        String query = "SELECT * FROM mvt_fond WHERE dt_mvt <= ?";
+        UtilDb utilDb = new UtilDb();
+        try (Connection conn = utilDb.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            
+            stmt.setDate(1, new java.sql.Date(date.getTime()));
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    MvtFond fond = new MvtFond();
+                    fond.setIdMvtFond(rs.getInt("id_mvt_fond"));
+                    fond.setIdUser(rs.getInt("id_user"));
+                    fond.setDepot(rs.getDouble("depot"));
+                    fond.setRetrait(rs.getDouble("retrait"));
+                    fond.setDtMvt(rs.getTimestamp("dt_mvt"));
+                    fond.setTypeMvt();
+                    
+                    fonds.add(fond);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return fonds;
+    }
 
-    
+    public List<MvtFond> getFondsByUserAndDate(int idUser, Date date) throws Exception {
+        List<MvtFond> fonds = new ArrayList<>();
+        String query = "SELECT * FROM mvt_fond WHERE id_user = ? AND dt_mvt <= ?";
+        UtilDb utilDb = new UtilDb();
+        try (Connection conn = utilDb.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            
+            stmt.setInt(1, idUser);
+            stmt.setDate(2, new java.sql.Date(date.getTime()));
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    MvtFond fond = new MvtFond();
+                    fond.setIdMvtFond(rs.getInt("id_mvt_fond"));
+                    fond.setIdUser(rs.getInt("id_user"));
+                    fond.setDepot(rs.getDouble("depot"));
+                    fond.setRetrait(rs.getDouble("retrait"));
+                    fond.setDtMvt(rs.getTimestamp("dt_mvt"));
+                    fond.setTypeMvt();
+                    
+                    fonds.add(fond);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return fonds;
+    }
 }

@@ -19,8 +19,10 @@ public class FondController {
     public String etatFond (Model model)throws Exception{
         MvtFond mvt = new MvtFond();   
         List<MvtFond> mvtFonds= new ArrayList<>();
+        double fond=mvt.getFondRestant();
         mvtFonds=mvt.findById(0);
         model.addAttribute("lmvt", mvtFonds);
+        model.addAttribute("fond",fond);
         return "listeMvt";
     }
 

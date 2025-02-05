@@ -27,6 +27,25 @@ public class MvtFond  {
     Timestamp dtMvt;
 
     String typeMvt;
+    public String getTypeMvt() {
+        return typeMvt;
+    }
+
+    double montant;
+
+    public void setMontant() {
+        if (this.getDepot()!=0) {
+            this.montant=this.getDepot();
+        }
+        else{
+            this.montant=this.getRetrait();
+            
+        }
+    }
+
+    public double getMontant() {
+        return montant;
+    }
 
    public void setTypeMvt()
         {   

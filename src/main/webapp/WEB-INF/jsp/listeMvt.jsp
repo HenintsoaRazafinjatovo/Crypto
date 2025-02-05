@@ -122,7 +122,7 @@
   </thead>
   <tbody>
     <% List<MvtFond>  mvtFonds = (List<MvtFond>) request.getAttribute("lmvt"); %> 
-    <% for(MvtFond mvtFond : mvtFonds)  {%>
+    <% for(MvtFond mvtFond : mvtFonds)  { %>
     <tr>
       <td><%= mvtFond.getIdUser() %></td>
       <td><%= mvtFond.getTypeMvt() %></td>

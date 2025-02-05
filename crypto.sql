@@ -3,6 +3,7 @@ CREATE DATABASE crypto;
 CREATE TABLE cryptomonnaie(
    id_cryptomonnaie SERIAL,
    nom_crypto VARCHAR(50)  NOT NULL,
+   val_initial NUMERIC(15,2)  ,
    PRIMARY KEY(id_cryptomonnaie)
 );
 

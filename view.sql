@@ -1,3 +1,5 @@
+select * from cryptomonnaie c join histo_crypto h on c.id_cryptomonnaie = h.id_cryptomonnaie;
+
 CREATE OR REPLACE VIEW vue_crypto_par_utilisateur AS
 SELECT 
     u.id_user,

@@ -21,6 +21,9 @@ public class RestCrypto {
     @RequestMapping("/rest/crypto")
     public List<Crypto> chart() throws Exception {
         List<Crypto> cryptos = new Crypto().FindAll();
+        for (Crypto crypto : cryptos) {
+            crypto.setValInitial(BigDecimal.valueOf(crypto.getValeurLatest()));
+        }
         return cryptos;
     }
     @PutMapping("/rest/crypto/update")

@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Date;
+
 
 import mg.crypto.connect.GenericDao;
 import mg.crypto.connect.UtilDb;
@@ -189,14 +189,14 @@ public class MvtFond  {
         }
     }
 
-    public List<MvtFond> getAllFondsBeforeDate(Date date) throws Exception {
+    public List<MvtFond> getAllFondsBeforeDate(Timestamp date) throws Exception {
         List<MvtFond> fonds = new ArrayList<>();
         String query = "SELECT * FROM mvt_fond WHERE dt_mvt <= ?";
         UtilDb utilDb = new UtilDb();
         try (Connection conn = utilDb.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             
-            stmt.setDate(1, new java.sql.Date(date.getTime()));
+            stmt.setTimestamp(1,  date);
             
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -217,7 +217,7 @@ public class MvtFond  {
         return fonds;
     }
 
-    public List<MvtFond> getFondsByUserAndDate(int idUser, Date date) throws Exception {
+    public List<MvtFond> getFondsByUserAndDate(int idUser, Timestamp date) throws Exception {
         List<MvtFond> fonds = new ArrayList<>();
         String query = "SELECT * FROM mvt_fond WHERE id_user = ? AND dt_mvt <= ?";
         UtilDb utilDb = new UtilDb();
@@ -225,7 +225,7 @@ public class MvtFond  {
              PreparedStatement stmt = conn.prepareStatement(query)) {
             
             stmt.setInt(1, idUser);
-            stmt.setDate(2, new java.sql.Date(date.getTime()));
+            stmt.setTimestamp(2, date);
             
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {

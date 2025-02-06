@@ -1,5 +1,8 @@
 package mg.crypto.models;
 
+import mg.crypto.service.FirebaseConfig;
+import java.util.concurrent.ExecutionException;
+
 public class User {
     private int id;
     private String email;
@@ -59,5 +62,15 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public User getInfoUser(int idUser) {
+        FirebaseConfig firebaseConfig = new FirebaseConfig();
+        try {
+            return firebaseConfig.getUserById(idUser);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

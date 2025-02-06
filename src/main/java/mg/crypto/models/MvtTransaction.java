@@ -1,7 +1,7 @@
 package mg.crypto.models;
 
 import java.sql.Connection;
-import java.sql.Date;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -137,14 +137,14 @@ public class MvtTransaction {
         }
     }
    
-    public List<MvtTransaction> getAllTransactionsBeforeDate(Date date) throws Exception {
+    public List<MvtTransaction> getAllTransactionsBeforeDate(Timestamp date2) throws Exception {
         List<MvtTransaction> transactions = new ArrayList<>();
         String query = "SELECT * FROM mvt_transaction WHERE date_transaction <= ?";
         UtilDb utilDb = new UtilDb();
         try (Connection conn = utilDb.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             
-            stmt.setDate(1, date);
+            stmt.setTimestamp(1, date2);
             
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -166,7 +166,7 @@ public class MvtTransaction {
         return transactions;
     }
 
-    public List<MvtTransaction> getTransactionsByUserAndDate(int idUser, Date date) throws Exception {
+    public List<MvtTransaction> getTransactionsByUserAndDate(int idUser, Timestamp date) throws Exception {
         List<MvtTransaction> transactions = new ArrayList<>();
         String query = "SELECT * FROM mvt_transaction WHERE id_user = ? AND date_transaction <= ?";
         UtilDb utilDb = new UtilDb();
@@ -174,7 +174,7 @@ public class MvtTransaction {
              PreparedStatement stmt = conn.prepareStatement(query)) {
             
             stmt.setInt(1, idUser);
-            stmt.setDate(2, date);
+            stmt.setTimestamp(2, date);
             
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -196,7 +196,7 @@ public class MvtTransaction {
         return transactions;
     }
 
-    public List<MvtTransaction> getTransactionsByCryptoAndDate(int idCrypto, Date date) throws Exception {
+    public List<MvtTransaction> getTransactionsByCryptoAndDate(int idCrypto, Timestamp date) throws Exception {
         List<MvtTransaction> transactions = new ArrayList<>();
         String query = "SELECT * FROM mvt_transaction WHERE id_cryptomonnaie = ? AND date_transaction <= ?";
         UtilDb utilDb = new UtilDb();
@@ -204,7 +204,7 @@ public class MvtTransaction {
              PreparedStatement stmt = conn.prepareStatement(query)) {
             
             stmt.setInt(1, idCrypto);
-            stmt.setDate(2, date);
+            stmt.setTimestamp(2, date);
             
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {

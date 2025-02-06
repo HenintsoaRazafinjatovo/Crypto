@@ -1,10 +1,10 @@
 package mg.crypto.utils;
 import java.lang.reflect.*;
 
-import javax.swing.*;
+
 import java.sql.*;
 /* import aff.ButtonClassListener;*/
-import java.awt.*;
+
 import java.io.*;
 public class Fonctions {
 

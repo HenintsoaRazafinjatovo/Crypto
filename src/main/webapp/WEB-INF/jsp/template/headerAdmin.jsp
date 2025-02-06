@@ -69,11 +69,11 @@
       <div class="px-3 py-2">
         <h2 class="uk-h2 mb-4 ml-3 mt-3">Backoffice crypto</h2>
         <ul class="uk-nav uk-nav-secondary">
-          <li> <a class="font-medium" href="/porteFeuille"
+          <li> <a class="font-medium" href="/admin/accueil"
               uk-toggle="" role="button"> <span class="mr-2 size-4"> <uk-icon icon="check"></uk-icon> </span>
               Validation depot & retrait
             </a> </li>
-            <li> <a class="font-medium" href="/crypto/chart"
+            <li> <a class="font-medium" href="/admin/logout"
               uk-toggle="" role="button"> <span class="mr-2 size-4"> <uk-icon icon="arrow-left"></uk-icon> </span>
               Deconnexion
             </a> </li>

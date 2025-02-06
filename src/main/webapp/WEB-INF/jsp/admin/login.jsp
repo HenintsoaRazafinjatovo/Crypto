@@ -16,7 +16,7 @@
                 <%= request.getAttribute("error") %>
             </div>
         <% } %>
-        <form id="loginForm" method="POST" action="admin">
+        <form id="loginForm" method="POST" action="/login/admin">
             <input type="text" name="nom" placeholder="Email" value="admin" required>
             <input type="password" name="pwd" placeholder="Password" value="admin" required>
             <input type="submit" value="Login">

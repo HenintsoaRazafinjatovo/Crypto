@@ -5,8 +5,10 @@
 <br/>
 <div class="uk-card uk-card-body uk-card-default">
 <h2 class="uk-h4">Filtre</h2>
+<br/>
 <form method="get" action="filterTransactions">
-  <div class="uk-margin">
+<div class="row">
+  <div class="uk-margin col-md-6">
     <label for="type">Type:</label>
     <select name="type" id="type" class="uk-select">
       <option value="">Tous</option>
@@ -14,7 +16,7 @@
       <option value="Retrait">Retrait</option>
     </select>
   </div>
-  <div class="uk-margin">
+  <div class="uk-margin col-md-6">
     <label for="etat">Etat:</label>
     <select name="etat" id="etat" class="uk-select">
       <option value="">Tous</option>
@@ -23,7 +25,9 @@
       <option value="Refused">Rejected</option>
     </select>
   </div>
-  <button type="submit" class="uk-button uk-button-primary">Filtrer</button>
+</div>
+<br/>
+  <button type="submit" class="uk-btn uk-btn-primary">Filtrer</button>
 </form>
 </div>
 <br/>

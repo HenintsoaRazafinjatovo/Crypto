@@ -100,6 +100,22 @@ public class Reflect {
         Object res=m.invoke(o, parameters);
         return res;
     }
+    public static Object executeMethod2(String className,Object o , String methodName , Object... parameters) throws NoSuchMethodException, SecurityException, IllegalAccessException, InvocationTargetException, ClassNotFoundException{
+        Class c=o.getClass();
+        Method m=null;
+        if(parameters!=null){
+            List<Class> ls=new ArrayList<Class>();
+            for (Object object : parameters) {
+                ls.add(changeToPrimitive(Class.forName(className)));
+            }
+            m=c.getMethod(methodName, ls.toArray(new Class[0]));
+        }
+        else{
+            m=c.getMethod(methodName,(Class[])null);
+        }
+        Object res=m.invoke(o, parameters);
+        return res;
+    }
 
     public static AnnotationClass getAnnotationClass(Object e)
     {

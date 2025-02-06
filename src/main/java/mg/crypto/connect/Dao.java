@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.nio.file.Paths;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,6 +65,9 @@ public class Dao {
         Object to_Add = o.getClass().getConstructor((Class[]) null).newInstance((Object[]) null);
         for (int i = 0; i < ls_field.size(); i++) {
             Object value = rs.getObject(ls_col.get(i).colName());
+            ResultSetMetaData rsmd=rs.getMetaData();
+            int columnIndex = rs.findColumn(ls_col.get(i).colName());
+            String columnClassName = rsmd.getColumnClassName(columnIndex);
             /// executer le setters
             String setterName = Reflect.setCatMethodName(ls_field.get(i).getName());
             Reflect.executeMethod(to_Add, setterName, value);

@@ -123,7 +123,7 @@
             var row = '<tr>' +
               '<td>' + crypto.nomCrypto + '</td>' +
               '<td>' + crypto.valInitial + '</td>' +
-              '<td><button class="uk-button uk-button-default">Acheter</button></td>' +
+              '<td><button class="uk-btn uk-btn-primary">Acheter</button></td>' +
               '</tr>';
             tableBody.append(row);
           });

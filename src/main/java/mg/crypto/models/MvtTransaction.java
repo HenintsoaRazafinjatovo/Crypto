@@ -1,6 +1,7 @@
 package mg.crypto.models;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import mg.crypto.connect.GenericDao;
 import mg.crypto.connect.UtilDb;
@@ -107,6 +108,17 @@ public class MvtTransaction {
     public void insert()throws Exception{
         GenericDao dao = new GenericDao(new UtilDb());
         dao.save(this);
+    }
+
+    public MvtTransaction findById(int id) throws Exception {
+        GenericDao dao = new GenericDao(new UtilDb());
+        MvtTransaction c = new MvtTransaction();
+        c.setIdMvtTransaction(id);
+        List<Object> objects = dao.findAllWithCriteria(c);
+        if (objects.isEmpty()) {
+            return null;
+        }
+        return (MvtTransaction) objects.get(0);
     }
 
     public void update() throws Exception{

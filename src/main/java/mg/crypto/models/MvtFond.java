@@ -28,6 +28,8 @@ public class MvtFond  {
     double retrait;
     @AnnotationAttribut(colName = "dt_mvt",insert = true)
     Timestamp dtMvt;
+    @AnnotationAttribut(colName = "etat",insert = true)
+    boolean etat;
     String typeMvt;
 
     

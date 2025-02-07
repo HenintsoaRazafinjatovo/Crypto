@@ -21,6 +21,8 @@ public class StockCryptoUser {
     String nomCrypto;
     @AnnotationAttribut(colName = "total_quantite" , insert = false)
     int qttTotal;
+    @AnnotationAttribut(colName = "total_valeur" , insert = false)
+    double valeurTotal;
 
 
     public StockCryptoUser(){
@@ -53,6 +55,13 @@ public class StockCryptoUser {
     public void setQttTotal(int qttTotal) {
         this.qttTotal = qttTotal;
     }
+
+    public int getValeurTotal() {
+        return valeurTotal;
+    }
+    public void setValeurTotal(double valeurTotal) {
+        this.valeurTotal = valeurTotal;
+    }
      
 
     public List<StockCryptoUser> getCryptoByIdUser(int idUser) throws Exception{
@@ -71,6 +80,7 @@ public class StockCryptoUser {
                     stockcrypto.setIdCrypto(rs.getInt("id_cryptomonnaie"));
                     stockcrypto.setNomCrypto(rs.getString("nom_crypto"));
                     stockcrypto.setQttTotal(rs.getInt("total_quantite"));
+                    stockCrypto.setValeurTotal(rs.getDouble("total_valeur"));
                     
                     stockCryptos.add(stockcrypto);
                 }
@@ -79,5 +89,28 @@ public class StockCryptoUser {
             e.printStackTrace();
         }
         return stockCryptos;
+    }
+
+    public double getValeurTotalCryptoByIdUser(int idUser) throws Exception{
+        double result = 0;
+        String query="SELECT SUM(total_valeur) as valeur_total_cryptos FROM vue_crypto_par_utilisateur WHERE id_user = ?";
+        UtilDb utilDb = new UtilDb();
+        try (Connection conn = utilDb.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            
+            stmt.setInt(1, idUser);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    results=rs.getDouble("valeur_total_cryptos");
+                    if (rs.wasNull()) { 
+                        result = 0;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

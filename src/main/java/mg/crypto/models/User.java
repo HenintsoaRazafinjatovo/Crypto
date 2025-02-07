@@ -60,4 +60,36 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+
+    public double checkPorteFeuilleUser(Timestamp tmp){
+        double result=0;
+        String sql="SELECT " +
+                "(SUM(CASE WHEN m.isVente = FALSE THEN m.montant ELSE 0 END) - " +
+                " SUM(CASE WHEN m.isVente = TRUE THEN m.montant ELSE 0 END)) AS valeur_portefeuille " +
+                "FROM mvt_transaction m " +
+                "WHERE m.date_transaction <= ? " +
+                "AND m.id_user = ? " +
+                "GROUP BY m.id_user " +
+                "ORDER BY m.id_user";
+        UtilDb utilDb = new UtilDb();
+
+        try (Connection conn = utilDb.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setTimestamp(1, tmp);
+            stmt.setInt(2, this.getId());       
+
+            try (ResultSet rs = stmt.executeQuery()) { 
+                if (rs.next()) {
+                    result=rs.getDouble("valeur_porteFeuille");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    
 }

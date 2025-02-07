@@ -114,19 +114,87 @@ public class MvtTransaction {
         dao.update(this);
     }
 
+    public List<MvtTransaction> findById(int id) throws Exception{
+        GenericDao dao= new GenericDao(new UtilDb());
+        MvtTransaction f= new MvtTransaction();
+        f.setIdUser(id);
+        List<MvtTransaction> obj= new ArrayList<>();
+        List<Object> mvt= dao.findAllWithCriteria(f);
+        for (Object mvtTrans : mvt) {
+            ((MvtTransaction)mvtTrans).setTypeMvt();
+            obj.add((MvtTransaction)mvtTrans);
+            System.out.println(((MvtTransaction)mvtTrans).getTypeMvt());
+        }
+        return obj;
+    }
+
+    public MvtTransaction finByIdUser(int iduser)throws Exception{
+        MvtTransaction transaction = new MvtTransaction();
+
+        String sql = "SELECT *  " +
+                "FROM mvt_transaction " +
+                "WHERE id_user = ? " +
+                "ORDER BY date_transaction DESC" +
+                " LIMIT 1" ;
+
+        UtilDb utilDb = new UtilDb();
+
+        try (Connection conn = utilDb.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+ 
+            stmt.setInt(1, iduser);       
+
+            try (ResultSet rs = stmt.executeQuery()) { 
+                if (rs.next()) {
+                    transaction.setIdMvtTransaction(rs.getInt("id_mvt_transaction"));
+                    transaction.setIdUser(rs.getInt("id_user"));
+                    transaction.setIdCrypto(rs.getInt("id_cryptomonnaie"));
+                    transaction.setMontant(rs.getDouble("montant"));
+                    transaction.setType(rs.getBoolean("isVente"));
+                    transaction.setQuantite(rs.getInt("qtt"));
+                    transaction.setDate(rs.getTimestamp("date_transaction"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return transaction;
+    }
+
     public void vente() throws Exception{
         if(this.isType()){
-            this.update();
+            this.insert();
             MvtFond mvt= new MvtFond();
             mvt.setDepot(this.getMontant());
             mvt.setIdUser(this.getIdUser());
             mvt.setDtMvt(this.getDate());
             String type="Depot";
             mvt.setTypeMvt(type);
+            mvt.setDepot(this.finByIdUser(mvt.getIdUser()).getMontant());
             mvt.AugmentationFond();
             System.out.println("Vente fait avec succès");
         }else{
             System.out.println("Vente n'est pas insérer");
         }
     }
+
+    public void achat() throws Exception{
+        if(this.isType()){
+            System.out.println("Achat n'est pas insérer");
+        }else{
+            this.insert();
+            MvtFond mvt= new MvtFond();
+            mvt.setDepot(this.getMontant());
+            mvt.setIdUser(this.getIdUser());
+            mvt.setDtMvt(this.getDate());
+            String type="Retrait";
+            mvt.setTypeMvt(type);
+            mvt.setRetraitt(this.finByIdUser(mvt.getIdUser()).getMontant());
+            mvt.FaireRetrait();
+            System.out.println("Achat fait avec succès");
+        }
+    }
+
+    
 }

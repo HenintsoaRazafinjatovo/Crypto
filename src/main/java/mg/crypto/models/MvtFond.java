@@ -13,7 +13,7 @@ import mg.crypto.utils.Identite;
 @AnnotationClass(tableName = "mvt_fond")
 public class MvtFond  {
 
-    @Identite(colName = "id_client")
+    @Identite(colName = "id_mvt_fond")
     @AnnotationAttribut(colName = "id_mvt_fond",insert = false)
     int idMvtFond;
     @AnnotationAttribut(colName = "id_user",insert=true)

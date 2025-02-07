@@ -3,11 +3,6 @@
 <%@ page import="java.util.HashMap" %>
 <jsp:include page="template/header.jsp"/>
 <%@page import="mg.crypto.models.*" %>
-<style>
-     
-
-
- </style>
 
 <h1 class="uk-h1">Liste des transactions</h1>
 <br />

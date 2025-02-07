@@ -31,7 +31,18 @@ public class MvtFond  {
     String typeMvt;
 
     
-
+    @Override
+    public String toString() {
+        return "MvtFond{" +
+                "idMvtFond=" + idMvtFond +
+                ", idUser=" + idUser +
+                ", depot=" + depot +
+                ", retrait=" + retrait +
+                ", dtMvt=" + dtMvt +
+                ", typeMvt='" + typeMvt + '\'' +
+                '}';
+    }
+    
     public void setTypeMvt()
         {   
             if (this.getDepot()!=0) {
@@ -130,7 +141,7 @@ public class MvtFond  {
     
     public void insert() throws Exception{
         GenericDao dao= new GenericDao(new UtilDb());
-        dao.save(dao);
+        dao.save(this);
     }
 
     public double getFondRestant() throws Exception

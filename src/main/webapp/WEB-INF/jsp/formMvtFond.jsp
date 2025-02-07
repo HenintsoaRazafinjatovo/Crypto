@@ -1,5 +1,5 @@
 <jsp:include page="template/header.jsp" />
-<h2 class="uk-h1">Vendre</h2>
+<h2 class="uk-h1">Depot / Retrait</h2>
 <br>
 <div class="uk-card uk-card-body uk-card-default">
 <form class="uk-form-stacked" method="post">

@@ -66,14 +66,14 @@
       <div class="px-3 py-2">
         <h2 class="uk-h2 mb-4 ml-3 mt-3">Cryptomonnaie</h2>
         <ul class="uk-nav uk-nav-secondary">
-          <li> <a class="font-medium" href="/vente/form"
+          <li> <a class="font-medium" href="/porteFeuille"
               uk-toggle="" role="button"> <span class="mr-2 size-4"> <uk-icon icon="tag"><!----><svg
                     xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="">
                     <circle cx="12" cy="12" r="10"></circle>
                     <polygon points="10 8 16 12 10 16 10 8"></polygon>
                   </svg></uk-icon> </span>
-              Vente
+              Portefeuille
             </a> </li>
             <li> <a class="font-medium" href="/crypto/chart"
               uk-toggle="" role="button"> <span class="mr-2 size-4"> <uk-icon icon="circle-play"><!----><svg
@@ -82,7 +82,7 @@
                     <circle cx="12" cy="12" r="10"></circle>
                     <polygon points="10 8 16 12 10 16 10 8"></polygon>
                   </svg></uk-icon> </span>
-              Cours de crypto
+              Crypto et cours
             </a> </li>
             <li> <a class="font-medium" href="/etatFond" uk-toggle=""
               role="button"> <span class="mr-2 size-4"> <uk-icon icon="radio"><!----><svg

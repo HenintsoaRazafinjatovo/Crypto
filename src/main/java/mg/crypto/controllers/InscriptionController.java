@@ -26,33 +26,4 @@ public class InscriptionController {
         return "login/inscription"; // Assurez-vous que "inscription" correspond au nom de votre fichier HTML sans l'extension
     }
 
-    @PostMapping("/submit_registration")
-    public String submitRegistration(@RequestParam("username") String username,
-                                     @RequestParam("email") String email,
-                                     @RequestParam("telephone") String telephone,
-                                     @RequestParam("password") String password,
-                                     RedirectAttributes redirectAttributes) {
-        // Create a new User object
-        User user = new User();
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setTelephone(telephone);
-        user.setPassword(password);
-
-        String apiUrl = "http://localhost:5005/api/Register";
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<User> request = new HttpEntity<>(user, headers);
-
-        ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.POST, request, String.class);
-
-        if (response.getStatusCode() == HttpStatus.OK) {
-            redirectAttributes.addFlashAttribute("message", "Votre mail a ete envoye!");
-            return "redirect:/login";
-        } else {
-            redirectAttributes.addFlashAttribute("message", "Registration failed: " + response.getBody());
-        }
-        return "redirect:/inscription";
-    }
-
 }

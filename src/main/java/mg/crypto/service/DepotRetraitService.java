@@ -89,7 +89,7 @@ public class DepotRetraitService {
     private void updateDocuments(JsonNode jsonResponse) throws Exception {
         for (JsonNode document : jsonResponse) {
             String documentName = document.path("document").path("name").asText();
-            URL url = new URL("https://firestore.googleapis.com/v1/" +documentName);
+            URL url = new URL("https://firestore.googleapis.com/v1/" + documentName);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("X-HTTP-Method-Override", "PATCH");
@@ -117,4 +117,44 @@ public class DepotRetraitService {
             }
         }
     }
+
+    public void insertNotifDmdValidated(MvtFond mvtFond, boolean etat) throws Exception {
+        URL url = new URL(
+                "https://firestore.googleapis.com/v1/projects/crypto-4ff95/databases/(default)/documents/notif_dmd");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json; utf-8");
+        conn.setDoOutput(true);
+
+        String texte;
+        if (mvtFond.getDepot() == 0) {
+            texte = "Votre retrait de valeur " + mvtFond.getRetrait() + (etat ? " est validé" : " est refusé");
+        } else if (mvtFond.getRetrait() == 0) {
+            texte = "Votre dépôt de valeur " + mvtFond.getDepot() + (etat ? " est validé" : " est refusé");
+        } else {
+            texte = "Mouvement de fonds non spécifié";
+        }
+
+        ObjectNode fields = objectMapper.createObjectNode();
+        fields.putObject("id_user").put("integerValue", mvtFond.getIdUser());
+        fields.putObject("wasFetched").put("booleanValue", false);
+        fields.putObject("texte").put("stringValue", texte);
+
+        ObjectNode body = objectMapper.createObjectNode();
+        body.set("fields", fields);
+
+        String jsonInputString = objectMapper.writeValueAsString(body);
+
+        try (OutputStream os = conn.getOutputStream()) {
+            byte[] input = jsonInputString.getBytes("utf-8");
+            os.write(input, 0, input.length);
+        }
+
+        int responseCode = conn.getResponseCode();
+        if (responseCode != HttpURLConnection.HTTP_OK) {
+            String response = conn.getResponseMessage();
+            throw new RuntimeException("Failed : HTTP error code : " + response);
+        }
+    }
+
 }

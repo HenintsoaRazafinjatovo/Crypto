@@ -123,10 +123,9 @@ public class MvtFondComplet {
 
     }
 
-    public void updateEtat(int idMvtFond, Boolean newEtat) throws Exception {
+    public void updateEtat(Connection conn,int idMvtFond, Boolean newEtat) throws Exception {
         String query = "UPDATE mvt_fond SET etat = ? WHERE id_mvt_fond = ?";
-        UtilDb utilDb = new UtilDb();
-        try (Connection conn = utilDb.getConnection();
+        try (
                 PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setBoolean(1, newEtat);
             stmt.setInt(2, idMvtFond);

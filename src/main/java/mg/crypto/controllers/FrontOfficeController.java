@@ -6,12 +6,14 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import mg.crypto.models.MvtFond;
 import mg.crypto.models.MvtTransaction;
 
 
 @Controller
+@RequestMapping("/frontOffice")
 public class FrontOfficeController {
 @GetMapping("/histoTransactionAll")
 public String histoTransactionAll(@RequestParam("date") String dateStr, Model model) throws Exception {

@@ -1,6 +1,20 @@
 package mg.crypto.models;
 
-import java.security.Timestamp;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import mg.crypto.connect.GenericDao;
 import mg.crypto.connect.UtilDb;
@@ -26,6 +40,46 @@ public class MvtTransaction {
     @AnnotationAttribut(colName = "date_transaction", insert = true)
     Timestamp date;
     private static final String FIRESTORE_URL = "https://firestore.googleapis.com/v1/projects/crypto-4ff95/databases/(default)/documents/mvt_transaction";
+    private static final String FIRESTORE_URL2 = "https://firestore.googleapis.com/v1/projects/crypto-4ff95/databases/(default)/documents/user_favoris";
+    private static final String FIRESTORE_URL3 = "https://firestore.googleapis.com/v1/projects/crypto-4ff95/databases/(default)/documents/notif_operation";
+
+
+    public int[] getCryptoFavByUser() throws Exception {
+        List<Integer> cryptoIds = new ArrayList<>();
+        URL url = new URL(FIRESTORE_URL2 + "?where=id_user=" + this.idUser);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Content-Type", "application/json; utf-8");
+
+        int responseCode = conn.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode responseJson = mapper.readTree(conn.getInputStream());
+            JsonNode documents = responseJson.get("documents");
+
+            if (documents.isArray()) {
+                for (JsonNode document : documents) {
+                    JsonNode fields = document.get("fields");
+                    int idCrypto = fields.get("id_crypto").get("integerValue").asInt();
+                    cryptoIds.add(idCrypto);
+                }
+            }
+        } else {
+            throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseMessage());
+        }
+
+        return cryptoIds.stream().mapToInt(i -> i).toArray();
+    }
+    public boolean isFavCryptoUser()throws Exception{
+        int[] cryptoIds = getCryptoFavByUser();
+        for (int id : cryptoIds) {
+            if (id == this.idCrypto) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public MvtTransaction(int idMvtTransaction, int idUser, int idCrypto, int quantite, double montant, boolean type,
@@ -70,7 +124,9 @@ public class MvtTransaction {
     public double getMontant() {
         return montant;
     }
-
+    public boolean getType() {
+        return type;
+    }
     public void setMontant(double montant) {
         this.montant = montant;
     }
@@ -116,8 +172,6 @@ public class MvtTransaction {
         dao.update(this);
     }
 
-<<<<<<< Updated upstream
-=======
     public List<MvtTransaction> findById(int id) throws Exception{
         GenericDao dao= new GenericDao(new UtilDb());
         MvtTransaction f= new MvtTransaction();
@@ -125,9 +179,9 @@ public class MvtTransaction {
         List<MvtTransaction> obj= new ArrayList<>();
         List<Object> mvt= dao.findAllWithCriteria(f);
         for (Object mvtTrans : mvt) {
-            ((MvtTransaction)mvtTrans).setTypeMvt();
+            ((MvtTransaction)mvtTrans).getType();
             obj.add((MvtTransaction)mvtTrans);
-            System.out.println(((MvtTransaction)mvtTrans).getTypeMvt());
+            System.out.println(((MvtTransaction)mvtTrans).getType());
         }
         return obj;
     }
@@ -202,7 +256,8 @@ public class MvtTransaction {
         return transaction;
     }
 
-    private void sendPostVente()throws Exception{
+    public void sendPostVente()throws Exception{
+        URL url = new URL(FIRESTORE_URL);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("POST");
         conn.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -235,7 +290,6 @@ public class MvtTransaction {
         }
     }
 
->>>>>>> Stashed changes
     public void vente() throws Exception{
         if(this.isType()){
             this.update();
@@ -251,10 +305,9 @@ public class MvtTransaction {
             System.out.println("Vente n'est pas insérer");
         }
     }
-<<<<<<< Updated upstream
-=======
 
-    private void sendPostAchat()throws Exception{
+    public void sendPostAchat()throws Exception{
+        URL url = new URL(FIRESTORE_URL);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("POST");
         conn.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -286,6 +339,36 @@ public class MvtTransaction {
             throw new RuntimeException("Failed : HTTP error code : " + test);
         }
     }
+    public void sendPostNotifOperation(String message)throws Exception{
+        URL url = new URL(FIRESTORE_URL3);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json; utf-8");
+        conn.setDoOutput(true);
+
+        ObjectNode fields = objectMapper.createObjectNode();
+        //colonnes
+        
+        fields.set("id_user",createIntegerField(this.getIdUser()));
+        fields.set("message",createStringField(message));
+     
+
+        ObjectNode body = objectMapper.createObjectNode();
+        body.set("fields", fields);
+
+        String jsonInputString = objectMapper.writeValueAsString(body);
+
+        try (OutputStream os = conn.getOutputStream()) {
+            byte[] input = jsonInputString.getBytes("utf-8");
+            os.write(input, 0, input.length);
+        }
+
+        int responseCode = conn.getResponseCode();
+        if (responseCode != HttpURLConnection.HTTP_OK) {
+            String test = conn.getResponseMessage();
+            throw new RuntimeException("Failed : HTTP error code : " + test);
+        }
+    }
 
     public void achat() throws Exception{
         if(this.isType()){
@@ -298,10 +381,16 @@ public class MvtTransaction {
             mvt.setDtMvt(this.getDate());
             String type="Retrait";
             mvt.setTypeMvt(type);
-            mvt.setRetraitt(this.finByIdUser(mvt.getIdUser()).getMontant());
+            mvt.setRetrait(this.findAchatByIdUser(mvt.getIdUser()).getMontant());
             mvt.FaireRetrait();
             System.out.println("Achat fait avec succès");
         }
+    }
+
+    private ObjectNode createStringField(String value) {
+        ObjectNode field = objectMapper.createObjectNode();
+        field.put("stringValue", value);
+        return field;
     }
 
     private ObjectNode createTimestampField(Timestamp timestamp) {
@@ -329,5 +418,4 @@ public class MvtTransaction {
         return field;
     }
     
->>>>>>> Stashed changes
 }

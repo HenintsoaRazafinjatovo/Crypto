@@ -1,6 +1,6 @@
 package mg.crypto.models;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -140,7 +140,7 @@ public class MvtFond  {
             return montant;
         }
 
-    public boolean checkFond() {
+    public boolean checkFond() throws Exception {
         boolean isSufficient = false;
         String mvt="Retrait";
         if (this.getTypeMvt().equals(mvt)) {
@@ -165,7 +165,7 @@ public class MvtFond  {
         return isSufficient;
     }
 
-    public void AugmentationFond(){
+    public void AugmentationFond() throws Exception{
         String mvt="Depot";
         if (this.getTypeMvt().equals(mvt)){
             this.setRetrait(0);
@@ -174,7 +174,7 @@ public class MvtFond  {
         }
     }
 
-    public void FaireRetrait(){
+    public void FaireRetrait() throws Exception{
         String mvt="Retrait";
         if (this.getTypeMvt().equals(mvt) && this.checkFond()) {
             this.setDepot(0);

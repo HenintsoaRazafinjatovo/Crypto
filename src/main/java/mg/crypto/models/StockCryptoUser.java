@@ -55,7 +55,7 @@ public class StockCryptoUser {
     }
      
 
-    public List<StockCryptoUser> getCryptoByIdUser(int idUser){
+    public List<StockCryptoUser> getCryptoByIdUser(int idUser) throws Exception{
         List<StockCryptoUser> stockCryptos = new ArrayList<>();
         String query="SELECT * FROM vue_crypto_par_utilisateur WHERE id_user = ?";
         UtilDb utilDb = new UtilDb();

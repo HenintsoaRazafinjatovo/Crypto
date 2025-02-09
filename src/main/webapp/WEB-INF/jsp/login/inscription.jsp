@@ -19,7 +19,8 @@
             <input type="text" name="username" placeholder="Username" required>
             <input type="email" name="email" placeholder="Email" required>
             <input type="text" name="telephone" placeholder="Telephone" required>
-            <input type="password" name="password" placeholder="Password" required>
+            <input type="password" name="password" id="password" placeholder="Password" required>
+            <div id="passwordError" class="error" style="color: red; display: none;">Password must be at least 6 characters long.</div>
             <input type="submit" value="Register">
         </form>
         <p>Have an account? <a href="/login">CONNECT here</a></p>
@@ -27,6 +28,15 @@
 
     <script>
         $(document).ready(function() {
+            $('#password').on('input', function() {
+                var password = $(this).val();
+                if (password.length < 6) {
+                    $('#passwordError').show();
+                } else {
+                    $('#passwordError').hide();
+                }
+            });
+
             $('#registrationForm').submit(function(event) {
                 event.preventDefault(); // Empêche la soumission normale du formulaire
 
@@ -36,6 +46,11 @@
                     telephone: $('input[name="telephone"]').val(),
                     password: $('input[name="password"]').val()
                 };
+
+                if (formData.password.length < 6) {
+                    $('#passwordError').show();
+                    return;
+                }
 
                 var $submitButton = $('input[type="submit"]');
                 $submitButton.prop('disabled', true); // Désactiver le bouton

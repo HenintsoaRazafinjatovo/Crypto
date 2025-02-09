@@ -10,6 +10,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import jakarta.servlet.http.HttpSession;
+import mg.crypto.models.Admin;
+
 import org.springframework.web.client.RestTemplate;
 import org.springframework.ui.Model;
 
@@ -48,5 +53,20 @@ public class LoginController {
             model.addAttribute("message", "Code validation failed: " + response.getBody());
             return "error";
         }
+    }
+    
+    @GetMapping("/login/admin")
+    public String index(Model m) throws Exception {
+        return "admin/login";
+    }
+
+    @PostMapping("/login/admin")
+    public String valide(Admin a, Model m,HttpSession session) throws Exception {
+        if (a.checkAdmin() != null) {
+            session.setAttribute("admin", a.checkAdmin());
+            return "redirect:/admin/accueil";
+        }
+        m.addAttribute("error", "Nom ou mot de passe incorrect");
+        return index(m);
     }
 }

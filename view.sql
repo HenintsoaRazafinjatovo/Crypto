@@ -1,3 +1,23 @@
+create or replace view v_mvt_fond_complet as
+select mf.id_mvt_fond,mf.id_user,
+case 
+	when mf.depot =0 and mf.retrait !=0 then 'Retrait'
+	when mf.depot!=0 and mf.retrait =0 then 'Depot' 
+	else 'Type impossible' end as type,
+case 
+	when mf.depot =0 then mf.retrait
+	when mf.depot!=0 then mf.depot 
+	else -1 end as montant,
+mf.dt_mvt,
+mf.etat,
+case 
+    when mf.etat is NULL then 'Pending'
+	when mf.etat=false then 'Refused'
+	else 'Validated'
+end as etatText
+from mvt_fond mf 
+
+
 CREATE OR REPLACE VIEW vue_crypto_par_utilisateur AS
 SELECT 
     mt.id_user,

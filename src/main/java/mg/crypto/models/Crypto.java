@@ -1,6 +1,7 @@
 package mg.crypto.models;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -29,6 +30,12 @@ public class Crypto {
         this.valInitial = valInitial;
     }
 
+    public double getValeurLatest() throws Exception {
+        Connection c=new UtilDb().getConnection();
+        HistoCrypto h=new HistoCrypto().findLastByCrypto(c, idCrypto);
+        return h.getValeur();
+    }
+
     public int getIdCrypto() {
         return idCrypto;
     }
@@ -50,11 +57,6 @@ public class Crypto {
 
     public Crypto(String nomCrypto) {
         this.nomCrypto = nomCrypto;
-    }
-
-    public Crypto(String nomCrypto, BigDecimal valInitiale) {
-        this.nomCrypto = nomCrypto;
-        this.valInitial = valInitiale;
     }
 
     public List<Crypto> FindAll() throws Exception {
@@ -87,9 +89,9 @@ public class Crypto {
 
     public List<Crypto> mock() throws Exception {
         List<Crypto> ls = new ArrayList<>();
-        Crypto c = new Crypto("jean", new BigDecimal("10000"));
-        Crypto ce = new Crypto("naej", new BigDecimal("13000"));
-        Crypto ca = new Crypto("rohy", new BigDecimal("12000"));
+        Crypto c = new Crypto("jean");
+        Crypto ce = new Crypto("naej");
+        Crypto ca = new Crypto("rohy");
         ls.add(ce);
         ls.add(c);
         ls.add(ca);

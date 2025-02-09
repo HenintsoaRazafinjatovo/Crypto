@@ -29,6 +29,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   $(document).ready(function() {
@@ -80,17 +81,30 @@
         url: '/crypto/getValues',
         method: 'GET',
         success: function(data) {
-          var currentTime = new Date().toLocaleTimeString();
-          myChart.data.labels.push(currentTime);
           var selectedCrypto = $('#cryptoSelect').val();
+          myChart.data.labels = []; // Réinitialiser les labels
+          myChart.data.datasets.forEach((dataset) => {
+            dataset.data = []; // Réinitialiser les données du dataset
+          });
+
+          var labelsSet = false;
           myChart.data.datasets.forEach((dataset) => {
             var cryptoName = dataset.label.replace('Prix du ', '');
-            var value = data[cryptoName];
-            historicalData[cryptoName].push(value); // Stocker les données historiques
-            if (selectedCrypto === 'all' || cryptoName === selectedCrypto) {
-              dataset.data.push(value);
-            } else {
-              dataset.data.push(null); // Ajoute une valeur nulle pour maintenir l'alignement des labels
+            var values = data[cryptoName];
+            if (values && values.length > 0) {
+              values.reverse(); // Inverser l'ordre des valeurs pour afficher les plus récentes à droite
+              values.forEach((value) => {
+                if (!labelsSet) {
+                  var formattedDate = moment(value.dateHistorique).format('DD/MM/YYYY HH:mm:ss'); // Formater la date
+                  myChart.data.labels.push(formattedDate); // Ajouter les labels de date
+                }
+                if (selectedCrypto === 'all' || cryptoName === selectedCrypto) {
+                  dataset.data.push(value.valeur); // Ajouter les valeurs au dataset
+                } else {
+                  dataset.data.push(null); // Ajoute une valeur nulle pour maintenir l'alignement des labels
+                }
+              });
+              labelsSet = true;
             }
           });
           myChart.update();
@@ -109,7 +123,7 @@
             var row = '<tr>' +
               '<td>' + crypto.nomCrypto + '</td>' +
               '<td>' + crypto.valInitial + '</td>' +
-              '<td><button class="uk-btn uk-btn-default">Acheter</button></td>' +
+              '<td><button class="uk-btn uk-btn-primary">Acheter</button></td>' +
               '</tr>';
             tableBody.append(row);
           });
@@ -124,6 +138,10 @@
       return 'rgba(' + r + ',' + g + ',' + b + ',' + opacity + ')';
     }
 
+    $('#cryptoSelect').change(function() {
+      updateChart(); // Mettre à jour le graphique lorsque la sélection change
+    });
+
     initializeDatasets();
     setInterval(updateChart, 10000); // Mettre à jour toutes les 10 secondes
     setInterval(updateCryptoTable, 10000); // Mettre à jour le tableau toutes les 10 secondes
@@ -131,5 +149,5 @@
     updateCryptoTable(); // Mettre à jour immédiatement au chargement de la page
   });
 </script>
-
 <jsp:include page="template/footer.jsp" />
+

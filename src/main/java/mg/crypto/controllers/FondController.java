@@ -19,8 +19,11 @@ public class FondController {
     public String etatFond (Model model)throws Exception{
         MvtFond mvt = new MvtFond();   
         List<MvtFond> mvtFonds= new ArrayList<>();
+        double fond=mvt.getFondRestant();
+        mvt.setIdUser(0);
         mvtFonds=mvt.findById(0);
         model.addAttribute("lmvt", mvtFonds);
+        model.addAttribute("fond",fond);
         return "listeMvt";
     }
 
@@ -47,6 +50,7 @@ public class FondController {
             mvt.setRetrait(montant);
             mvt.setDepot(0);
         }
+        mvt.setEtat(false);
         mvt.insert();
         return "redirect:/ajoutFond";
     }

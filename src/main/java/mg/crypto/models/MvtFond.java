@@ -1,5 +1,6 @@
 package mg.crypto.models;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,7 +19,7 @@ import mg.crypto.utils.Identite;
 @AnnotationClass(tableName = "mvt_fond")
 public class MvtFond  {
 
-    @Identite(colName = "id_client")
+    @Identite(colName = "id_mvt_fond")
     @AnnotationAttribut(colName = "id_mvt_fond",insert = false)
     int idMvtFond;
     @AnnotationAttribut(colName = "id_user",insert=true)
@@ -29,9 +30,38 @@ public class MvtFond  {
     double retrait;
     @AnnotationAttribut(colName = "dt_mvt",insert = true)
     Timestamp dtMvt;
+
     @AnnotationAttribut(colName = "etat",insert = true)
     boolean etat;
+
+    public void setEtat(boolean etat) {
+        this.etat = etat;
+    }
+
+    public boolean getEtat(){
+        return etat;
+    }
+
     String typeMvt;
+    public String getTypeMvt() {
+        return typeMvt;
+    }
+
+    double montant;
+
+    public void setMontant() {
+        if (this.getDepot()!=0) {
+            this.montant=this.getDepot();
+        }
+        else{
+            this.montant=this.getRetrait();
+            
+        }
+    }
+
+    public double getMontant() {
+        return montant;
+    }
 
     
 
@@ -65,10 +95,21 @@ public class MvtFond  {
         this.retrait = retrait;
     }
 
+    public void setRetrait(BigDecimal decimal) {
+        this.retrait=decimal.doubleValue();
+    }
+
+    public void setRetrait(BigDecimal decimal) {
+        this.retrait=decimal.doubleValue();
+    }
+
     public void setDtMvt(java.sql.Timestamp timestamp) {
         this.dtMvt = timestamp;
     }
 
+    public void setDepot(BigDecimal decimal) {
+        this.depot=decimal.doubleValue();
+    }
     public double getDepot() {
         return depot;
     }
@@ -105,46 +146,47 @@ public class MvtFond  {
 
         
 
-    public List<MvtFond> findAll() throws Exception
-        {
-            GenericDao dao= new GenericDao(new UtilDb());
-            List<Object> list=dao.findAll(new MvtFond());
-            List<MvtFond> obj= new ArrayList<>();
-            for (Object mvtFond : list) {
-                obj.add((MvtFond)mvtFond);
-            }
-            return obj;
-        } 
-    
-    public List<MvtFond> findById(int id) throws Exception
-        {
-            GenericDao dao= new GenericDao(new UtilDb());
-            MvtFond f= new MvtFond();
-            f.setIdUser(id);
-            List<MvtFond> obj= new ArrayList<>();
-            List<Object> mvt= dao.findAllWithCriteria(f);
-            for (Object mvtFond : mvt) {
-                ((MvtFond)mvtFond).setTypeMvt();
-                obj.add((MvtFond)mvtFond);
-                System.out.println(((MvtFond)mvtFond).getTypeMvt());
-            }
-            return obj;
-        }
-    
-    public void insert() throws Exception{
-        GenericDao dao= new GenericDao(new UtilDb());
-        dao.save(dao);
-    }
+        public List<MvtFond>findAll() throws Exception
+            {
+                GenericDao dao= new GenericDao(new UtilDb());
+                List<Object> list=dao.findAll(new MvtFond());
+                List<MvtFond> obj= new ArrayList<>();
+                for (Object mvtFond : list) {
+                    obj.add((MvtFond)mvtFond);
+                }
+                return obj;
+            } 
+        
+        public List<MvtFond> findById(int id) throws Exception
+            {
+                GenericDao dao= new GenericDao(new UtilDb());
+                MvtFond f= new MvtFond();
+                f.setIdUser(id);
+                List<MvtFond> obj= new ArrayList<>();
+                List<Object> mvt= dao.findAllWithCriteria(f);
+                for (Object mvtFond : mvt) {
+                    ((MvtFond)mvtFond).setTypeMvt();
+                    ((MvtFond)mvtFond).setMontant();
 
-    public double getFondRestant() throws Exception
-        {   
-            double montant=0;
-            List<MvtFond> fonds =this.findById(this.getIdUser());
-            for ( MvtFond fond : fonds) {
-                    montant+=fond.getFondRestant()-fond.getRetrait();
+                    obj.add((MvtFond)mvtFond);
+                }
+                return obj;
             }
-            return montant;
+        
+        public void insert() throws Exception{
+            GenericDao dao= new GenericDao(new UtilDb());
+            dao.save(this);
         }
+
+        public double getFondRestant() throws Exception
+            {   
+               double montant=0;
+               List<MvtFond> fonds =this.findById(this.getIdUser());
+                for ( MvtFond fond : fonds) {
+                        montant+=fond.getDepot()-fond.getRetrait();
+                }
+                return montant;
+            }
 
     public boolean checkFond() throws Exception {
         boolean isSufficient = false;

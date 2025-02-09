@@ -9,13 +9,12 @@
       <select
         class="uk-input"
         id="typemvt"
+        name="typemvt"
         type="number"
-        >
-
+      >
         <option value="1">depot</option>
         <option value="2">retrait</option>
-      
-      </select>
+    </select>
 
     </div>
   </div>
@@ -24,16 +23,19 @@
      <input
         class="uk-input"
         id="montantmvt"
+        name="montantmvt"
         type="number"
         placeholder="montant">
   </div>
+
     <div class="mb-3">
         <label class="uk-form-label" for="form-stacked-select">Date</label>
         <div class="uk-form-controls">
         <label for="datemvt">Date and Time:</label>
-    <input class="uk-input" type="datetime-local" id="datemvt" name="datemvt" required>
-    <br>
-        </div>
+        <input class="uk-input" type="datetime-local" id="datemvt" name="datemvt" required>
+          <br>
+    </div>
+
   <input type="submit" class="uk-btn uk-btn-primary" value="Valider" />
 </form>
 </div>

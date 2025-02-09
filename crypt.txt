@@ -25,3 +25,25 @@ CREATE TABLE mvt_transaction(
    UNIQUE(id_user),
    FOREIGN KEY(id_cryptomonnaie) REFERENCES cryptomonnaie(id_cryptomonnaie)
 );
+
+CREATE VIEW v_crypto_historique AS
+SELECT 
+    c.id_cryptomonnaie,
+    c.nom_crypto,
+    h.Id_Histo_crypto,
+    h.date_historique,
+    h.valeur
+FROM cryptomonnaie c
+JOIN Histo_crypto h ON c.id_cryptomonnaie = h.id_cryptomonnaie;
+
+
+CREATE VIEW v_crypto_commission AS
+SELECT 
+    c.id_cryptomonnaie,
+    c.nom_crypto,
+    com.Id_commission,
+    com.dt_commission,
+    com.type_commission,
+    com.valeur_commission
+FROM cryptomonnaie c
+JOIN commission com ON c.id_cryptomonnaie = com.id_cryptomonnaie;

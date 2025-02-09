@@ -1,22 +1,21 @@
-<%  %>
-<jsp:include page="template/header.jsp" />
-<%@ page import="mg.crypto.models.MvtFond" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %>
+<jsp:include page="template/header.jsp"/>
+<%@page import="mg.crypto.models.*" %>
+
 <h1 class="uk-h1">Liste des transactions</h1>
 <br />
 <div class="uk-card uk-card-body uk-card-default">
-<form class="uk-form-inline" action="/filtrerMvt" method="post">
-  <div class="mb-3">
-    <label class="uk-form-label">Type</label>
-    <div class="uk-form-controls">
-      <select name="typeComposant" class="uk-select">
-        <option value="-1"> </option>
-          <option value="1">Achat</option>
-          <option value="2">Vente</option>
-      </select>
-    </div>
-  </div>
-  <input type="submit" class="uk-btn uk-btn-primary" value="Filtrer" />
+<form class="uk-form-inline" action="/etatFond" method="post">
+       <div class="column" id="actif">
+              <h2>fond total</h2>
+              <ul>
+                <li>Montant<span><%= (double) request.getAttribute("fond") %></span>
+                </li>
+              </ul>
+        </div>
+      
 </form>
 <br/>
 <table class="uk-table uk-table-middle uk-table-divider">
@@ -29,14 +28,13 @@
     </tr>
   </thead>
   <tbody>
-    <% for(MvtFond mvt : (List<MvtFond>)request.getAttribute("lmvt"))  {%>
+    <% List<MvtFond>  mvtFonds = (List<MvtFond>) request.getAttribute("lmvt"); %> 
+    <% for(MvtFond mvtFond : mvtFonds)  { %>
     <tr>
-    
-    
-      <td>Utilisateur</td>
-      <td>mouvement type</td>
-      <td>montant</td>
-      <td>Date</td>
+      <td><%= mvtFond.getIdUser() %></td>
+      <td><%= mvtFond.getTypeMvt() %></td>
+      <td><%= mvtFond.getMontant() %> </td>
+      <td><%= mvtFond.getDtMvt() %></td>
     </tr>
     <% } %>
   </tbody>

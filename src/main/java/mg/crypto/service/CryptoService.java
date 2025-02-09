@@ -4,9 +4,8 @@ import mg.crypto.models.Crypto;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Random;
+
 
 @Service
 public class CryptoService {

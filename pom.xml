@@ -79,7 +79,15 @@
             <artifactId>tomcat-embed-jasper</artifactId>
             <scope>provided</scope>
         </dependency>
+         <!-- dependecy for firebase -->
+    <dependency>
+        <groupId>com.google.firebase</groupId>
+        <artifactId>firebase-admin</artifactId>
+        <version>9.1.1</version>
+    </dependency>
     </dependencies>
+   
+
 
     <build>
         <plugins>

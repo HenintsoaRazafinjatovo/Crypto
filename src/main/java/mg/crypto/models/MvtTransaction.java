@@ -1,6 +1,13 @@
 package mg.crypto.models;
 
+import java.sql.Connection;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import mg.crypto.connect.GenericDao;
 import mg.crypto.connect.UtilDb;
@@ -177,6 +184,95 @@ public class MvtTransaction {
         }else{
             System.out.println("Vente n'est pas insérer");
         }
+    }
+   
+    public List<MvtTransaction> getAllTransactionsBeforeDate(Timestamp date2) throws Exception {
+        List<MvtTransaction> transactions = new ArrayList<>();
+        String query = "SELECT * FROM mvt_transaction WHERE date_transaction <= ?";
+        UtilDb utilDb = new UtilDb();
+        try (Connection conn = utilDb.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            
+            stmt.setTimestamp(1, date2);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    MvtTransaction transaction = new MvtTransaction();
+                    transaction.setIdMvtTransaction(rs.getInt("id_mvt_transaction"));
+                    transaction.setIdUser(rs.getInt("id_user"));
+                    transaction.setIdCrypto(rs.getInt("id_cryptomonnaie"));
+                    transaction.setQuantite(rs.getInt("qtt"));
+                    transaction.setMontant(rs.getDouble("montant"));
+                    transaction.setType(rs.getBoolean("isVente"));
+                    transaction.setDate(rs.getTimestamp("date_transaction"));
+                    
+                    transactions.add(transaction);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return transactions;
+    }
+
+    public List<MvtTransaction> getTransactionsByUserAndDate(int idUser, Timestamp date) throws Exception {
+        List<MvtTransaction> transactions = new ArrayList<>();
+        String query = "SELECT * FROM mvt_transaction WHERE id_user = ? AND date_transaction <= ?";
+        UtilDb utilDb = new UtilDb();
+        try (Connection conn = utilDb.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            
+            stmt.setInt(1, idUser);
+            stmt.setTimestamp(2, date);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    MvtTransaction transaction = new MvtTransaction();
+                    transaction.setIdMvtTransaction(rs.getInt("id_mvt_transaction"));
+                    transaction.setIdUser(rs.getInt("id_user"));
+                    transaction.setIdCrypto(rs.getInt("id_cryptomonnaie"));
+                    transaction.setQuantite(rs.getInt("qtt"));
+                    transaction.setMontant(rs.getDouble("montant"));
+                    transaction.setType(rs.getBoolean("isVente"));
+                    transaction.setDate(rs.getTimestamp("date_transaction"));
+                    
+                    transactions.add(transaction);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return transactions;
+    }
+
+    public List<MvtTransaction> getTransactionsByCryptoAndDate(int idCrypto, Timestamp date) throws Exception {
+        List<MvtTransaction> transactions = new ArrayList<>();
+        String query = "SELECT * FROM mvt_transaction WHERE id_cryptomonnaie = ? AND date_transaction <= ?";
+        UtilDb utilDb = new UtilDb();
+        try (Connection conn = utilDb.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            
+            stmt.setInt(1, idCrypto);
+            stmt.setTimestamp(2, date);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    MvtTransaction transaction = new MvtTransaction();
+                    transaction.setIdMvtTransaction(rs.getInt("id_mvt_transaction"));
+                    transaction.setIdUser(rs.getInt("id_user"));
+                    transaction.setIdCrypto(rs.getInt("id_cryptomonnaie"));
+                    transaction.setQuantite(rs.getInt("qtt"));
+                    transaction.setMontant(rs.getDouble("montant"));
+                    transaction.setType(rs.getBoolean("isVente"));
+                    transaction.setDate(rs.getTimestamp("date_transaction"));
+                    
+                    transactions.add(transaction);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return transactions;
     }
 
     public void achat() throws Exception{

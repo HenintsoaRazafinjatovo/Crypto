@@ -43,9 +43,6 @@ public class MvtFond  {
     }
 
     String typeMvt;
-    public String getTypeMvt() {
-        return typeMvt;
-    }
 
     double montant;
 
@@ -93,10 +90,6 @@ public class MvtFond  {
 
     public void setRetrait(double retrait) {
         this.retrait = retrait;
-    }
-
-    public void setRetrait(BigDecimal decimal) {
-        this.retrait=decimal.doubleValue();
     }
 
     public void setRetrait(BigDecimal decimal) {

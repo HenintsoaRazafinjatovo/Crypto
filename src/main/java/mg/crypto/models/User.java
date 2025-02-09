@@ -1,6 +1,13 @@
 package mg.crypto.models;
 
+import mg.crypto.connect.UtilDb;
 import mg.crypto.service.FirebaseConfig;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.concurrent.ExecutionException;
 
 public class User {
@@ -84,7 +91,7 @@ public class User {
     }
 
 
-    public double checkPorteFeuilleUser(Timestamp tmp){
+    public double checkPorteFeuilleUser(Timestamp tmp) throws Exception{
         double result=0;
         String sql="SELECT " +
                 "(SUM(CASE WHEN m.isVente = FALSE THEN m.montant ELSE 0 END) - " +

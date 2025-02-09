@@ -2,6 +2,7 @@ package mg.crypto.models;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -182,6 +183,7 @@ public class MvtFond  {
             }
 
     public boolean checkFond() throws Exception {
+    public boolean checkFond() throws Exception {
         boolean isSufficient = false;
         String mvt="Retrait";
         if (this.getTypeMvt().equals(mvt)) {
@@ -207,6 +209,7 @@ public class MvtFond  {
     }
 
     public void AugmentationFond() throws Exception{
+    public void AugmentationFond() throws Exception{
         String mvt="Depot";
         if (this.getTypeMvt().equals(mvt)){
             this.setRetrait(0);
@@ -215,6 +218,7 @@ public class MvtFond  {
         }
     }
 
+    public void FaireRetrait() throws Exception{
     public void FaireRetrait() throws Exception{
         String mvt="Retrait";
         if (this.getTypeMvt().equals(mvt) && this.checkFond()) {

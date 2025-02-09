@@ -66,6 +66,20 @@ public class Crypto {
         }
         return crypto;
     }
+    
+    public Crypto findById(int id) throws Exception
+    {
+        GenericDao dao= new GenericDao(new UtilDb());
+        Crypto crypto= new Crypto();
+        crypto.setIdCrypto(id);
+        List<Crypto> obj= new ArrayList<>();
+        List<Object> mvt= dao.findAllWithCriteria(crypto);
+        for (Object mvtFond : mvt) {
+
+            obj.add((Crypto)mvtFond);
+        }
+        return obj.get(0);
+    }
 
     public void update() throws Exception {
         GenericDao dao = new GenericDao(new UtilDb());

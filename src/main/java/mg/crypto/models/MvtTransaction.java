@@ -1,13 +1,20 @@
 package mg.crypto.models;
 
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
 import java.sql.Connection;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import mg.crypto.connect.GenericDao;
 import mg.crypto.connect.UtilDb;
@@ -32,6 +39,48 @@ public class MvtTransaction {
     boolean type;
     @AnnotationAttribut(colName = "date_transaction", insert = true)
     Timestamp date;
+    private static final String FIRESTORE_URL = "https://firestore.googleapis.com/v1/projects/crypto-4ff95/databases/(default)/documents/mvt_transaction";
+    private static final String FIRESTORE_URL2 = "https://firestore.googleapis.com/v1/projects/crypto-4ff95/databases/(default)/documents/user_favoris";
+    private static final String FIRESTORE_URL3 = "https://firestore.googleapis.com/v1/projects/crypto-4ff95/databases/(default)/documents/notif_operation";
+
+
+    public int[] getCryptoFavByUser() throws Exception {
+        List<Integer> cryptoIds = new ArrayList<>();
+        URL url = new URL(FIRESTORE_URL2 + "?where=id_user=" + this.idUser);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Content-Type", "application/json; utf-8");
+
+        int responseCode = conn.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode responseJson = mapper.readTree(conn.getInputStream());
+            JsonNode documents = responseJson.get("documents");
+
+            if (documents.isArray()) {
+                for (JsonNode document : documents) {
+                    JsonNode fields = document.get("fields");
+                    int idCrypto = fields.get("id_crypto").get("integerValue").asInt();
+                    cryptoIds.add(idCrypto);
+                }
+            }
+        } else {
+            throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseMessage());
+        }
+
+        return cryptoIds.stream().mapToInt(i -> i).toArray();
+    }
+    public boolean isFavCryptoUser()throws Exception{
+        int[] cryptoIds = getCryptoFavByUser();
+        for (int id : cryptoIds) {
+            if (id == this.idCrypto) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public MvtTransaction(int idMvtTransaction, int idUser, int idCrypto, int quantite, double montant, boolean type,
             Timestamp date) {
@@ -75,7 +124,9 @@ public class MvtTransaction {
     public double getMontant() {
         return montant;
     }
-
+    public boolean getType() {
+        return type;
+    }
     public void setMontant(double montant) {
         this.montant = montant;
     }
@@ -128,19 +179,20 @@ public class MvtTransaction {
         List<MvtTransaction> obj= new ArrayList<>();
         List<Object> mvt= dao.findAllWithCriteria(f);
         for (Object mvtTrans : mvt) {
-            ((MvtTransaction)mvtTrans).setTypeMvt();
+            ((MvtTransaction)mvtTrans).getType();
             obj.add((MvtTransaction)mvtTrans);
-            System.out.println(((MvtTransaction)mvtTrans).getTypeMvt());
+            System.out.println(((MvtTransaction)mvtTrans).getType());
         }
         return obj;
     }
 
-    public MvtTransaction finByIdUser(int iduser)throws Exception{
+    public MvtTransaction findVenteByIdUser(int iduser)throws Exception{
         MvtTransaction transaction = new MvtTransaction();
 
         String sql = "SELECT *  " +
                 "FROM mvt_transaction " +
                 "WHERE id_user = ? " +
+                "AND isVente = true" +
                 "ORDER BY date_transaction DESC" +
                 " LIMIT 1" ;
 
@@ -169,6 +221,75 @@ public class MvtTransaction {
         return transaction;
     }
 
+    public MvtTransaction findAchatByIdUser(int iduser)throws Exception{
+        MvtTransaction transaction = new MvtTransaction();
+
+        String sql = "SELECT *  " +
+                "FROM mvt_transaction " +
+                "WHERE id_user = ? " +
+                "AND isVente = false" +
+                "ORDER BY date_transaction DESC" +
+                " LIMIT 1" ;
+
+        UtilDb utilDb = new UtilDb();
+
+        try (Connection conn = utilDb.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+ 
+            stmt.setInt(1, iduser);       
+
+            try (ResultSet rs = stmt.executeQuery()) { 
+                if (rs.next()) {
+                    transaction.setIdMvtTransaction(rs.getInt("id_mvt_transaction"));
+                    transaction.setIdUser(rs.getInt("id_user"));
+                    transaction.setIdCrypto(rs.getInt("id_cryptomonnaie"));
+                    transaction.setMontant(rs.getDouble("montant"));
+                    transaction.setType(rs.getBoolean("isVente"));
+                    transaction.setQuantite(rs.getInt("qtt"));
+                    transaction.setDate(rs.getTimestamp("date_transaction"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return transaction;
+    }
+
+    public void sendPostVente()throws Exception{
+        URL url = new URL(FIRESTORE_URL);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json; utf-8");
+        conn.setDoOutput(true);
+
+        ObjectNode fields = objectMapper.createObjectNode();
+        //colonnes
+        fields.set("id_mvt_transaction",createIntegerField(this.getIdMvtTransaction()));
+        fields.set("id_cryptomonnaie", createIntegerField(this.getIdCrypto()));
+        fields.set("id_user",createIntegerField(this.getIdUser()));
+        fields.set("qtt",createIntegerField(this.getQuantite()));
+        fields.set("montant",createDoubleField(this.getMontant()));
+        fields.set("date_transaction",createTimestampField(this.getDate()));
+        fields.set("isVente",createBooleanField(true));
+
+        ObjectNode body = objectMapper.createObjectNode();
+        body.set("fields", fields);
+
+        String jsonInputString = objectMapper.writeValueAsString(body);
+
+        try (OutputStream os = conn.getOutputStream()) {
+            byte[] input = jsonInputString.getBytes("utf-8");
+            os.write(input, 0, input.length);
+        }
+
+        int responseCode = conn.getResponseCode();
+        if (responseCode != HttpURLConnection.HTTP_OK) {
+            String test = conn.getResponseMessage();
+            throw new RuntimeException("Failed : HTTP error code : " + test);
+        }
+    }
+
     public void vente() throws Exception{
         if(this.isType()){
             this.insert();
@@ -185,6 +306,119 @@ public class MvtTransaction {
             System.out.println("Vente n'est pas insérer");
         }
     }
+
+    public void sendPostAchat()throws Exception{
+        URL url = new URL(FIRESTORE_URL);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json; utf-8");
+        conn.setDoOutput(true);
+
+        ObjectNode fields = objectMapper.createObjectNode();
+        //colonnes
+        fields.set("id_mvt_transaction",createIntegerField(this.getIdMvtTransaction()));
+        fields.set("id_cryptomonnaie", createIntegerField(this.getIdCrypto()));
+        fields.set("id_user",createIntegerField(this.getIdUser()));
+        fields.set("qtt",createIntegerField(this.getQuantite()));
+        fields.set("montant",createDoubleField(this.getMontant()));
+        fields.set("date_transaction",createTimestampField(this.getDate()));
+        fields.set("isVente",createBooleanField(false));
+
+        ObjectNode body = objectMapper.createObjectNode();
+        body.set("fields", fields);
+
+        String jsonInputString = objectMapper.writeValueAsString(body);
+
+        try (OutputStream os = conn.getOutputStream()) {
+            byte[] input = jsonInputString.getBytes("utf-8");
+            os.write(input, 0, input.length);
+        }
+
+        int responseCode = conn.getResponseCode();
+        if (responseCode != HttpURLConnection.HTTP_OK) {
+            String test = conn.getResponseMessage();
+            throw new RuntimeException("Failed : HTTP error code : " + test);
+        }
+    }
+    public void sendPostNotifOperation(String message)throws Exception{
+        URL url = new URL(FIRESTORE_URL3);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json; utf-8");
+        conn.setDoOutput(true);
+
+        ObjectNode fields = objectMapper.createObjectNode();
+        //colonnes
+        
+        fields.set("id_user",createIntegerField(this.getIdUser()));
+        fields.set("message",createStringField(message));
+     
+
+        ObjectNode body = objectMapper.createObjectNode();
+        body.set("fields", fields);
+
+        String jsonInputString = objectMapper.writeValueAsString(body);
+
+        try (OutputStream os = conn.getOutputStream()) {
+            byte[] input = jsonInputString.getBytes("utf-8");
+            os.write(input, 0, input.length);
+        }
+
+        int responseCode = conn.getResponseCode();
+        if (responseCode != HttpURLConnection.HTTP_OK) {
+            String test = conn.getResponseMessage();
+            throw new RuntimeException("Failed : HTTP error code : " + test);
+        }
+    }
+
+    public void achat() throws Exception{
+        if(this.isType()){
+            System.out.println("Achat n'est pas insérer");
+        }else{
+            this.insert();
+            MvtFond mvt= new MvtFond();
+            mvt.setDepot(this.getMontant());
+            mvt.setIdUser(this.getIdUser());
+            mvt.setDtMvt(this.getDate());
+            String type="Retrait";
+            mvt.setTypeMvt(type);
+            mvt.setRetrait(this.findAchatByIdUser(mvt.getIdUser()).getMontant());
+            mvt.FaireRetrait();
+            System.out.println("Achat fait avec succès");
+        }
+    }
+
+    private ObjectNode createStringField(String value) {
+        ObjectNode field = objectMapper.createObjectNode();
+        field.put("stringValue", value);
+        return field;
+    }
+
+    private ObjectNode createTimestampField(Timestamp timestamp) {
+        ObjectNode field = objectMapper.createObjectNode();
+        String formattedTimestamp = DateTimeFormatter.ISO_INSTANT.format(timestamp.toInstant());
+        field.put("timestampValue", formattedTimestamp);
+        return field;
+    }
+
+    private ObjectNode createIntegerField(int value) {
+        ObjectNode field = objectMapper.createObjectNode();
+        field.put("integerValue", value);
+        return field;
+    }
+
+    private ObjectNode createDoubleField(double value) {
+        ObjectNode field = objectMapper.createObjectNode();
+        field.put("doubleValue", value);
+        return field;
+    }
+
+    private ObjectNode createBooleanField(boolean value) {
+        ObjectNode field = objectMapper.createObjectNode();
+        field.put("booleanValue", value);
+        return field;
+    }
+    
    
     public List<MvtTransaction> getAllTransactionsBeforeDate(Timestamp date2) throws Exception {
         List<MvtTransaction> transactions = new ArrayList<>();

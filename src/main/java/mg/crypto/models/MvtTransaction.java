@@ -299,7 +299,7 @@ public class MvtTransaction {
             mvt.setDtMvt(this.getDate());
             String type="Depot";
             mvt.setTypeMvt(type);
-            mvt.setDepot(this.finByIdUser(mvt.getIdUser()).getMontant());
+            mvt.setDepot(this.findVenteByIdUser(mvt.getIdUser()).getMontant());
             mvt.AugmentationFond();
             System.out.println("Vente fait avec succès");
         }else{
@@ -509,22 +509,7 @@ public class MvtTransaction {
         return transactions;
     }
 
-    public void achat() throws Exception{
-        if(this.isType()){
-            System.out.println("Achat n'est pas insérer");
-        }else{
-            this.insert();
-            MvtFond mvt= new MvtFond();
-            mvt.setDepot(this.getMontant());
-            mvt.setIdUser(this.getIdUser());
-            mvt.setDtMvt(this.getDate());
-            String type="Retrait";
-            mvt.setTypeMvt(type);
-            mvt.setRetraitt(this.finByIdUser(mvt.getIdUser()).getMontant());
-            mvt.FaireRetrait();
-            System.out.println("Achat fait avec succès");
-        }
-    }
+   
 
     
 }

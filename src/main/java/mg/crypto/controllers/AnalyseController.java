@@ -23,7 +23,7 @@ public class AnalyseController {
     @GetMapping("/analyse")
     public String analyseForm (Model model)throws Exception{
         List<Crypto> cryptos= new ArrayList<>();
-        cryptos= new Crypto().findAll();
+        cryptos= new Crypto().FindAll();
         model.addAttribute("cryptos", cryptos);
         return "filtreAnalyse";
     }

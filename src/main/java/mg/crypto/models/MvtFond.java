@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.jasper.tagplugins.jstl.Util;
+
 import mg.crypto.connect.GenericDao;
 import mg.crypto.connect.UtilDb;
 import mg.crypto.utils.AnnotationAttribut;
@@ -32,13 +34,17 @@ public class MvtFond {
     Timestamp dtMvt;
 
     @AnnotationAttribut(colName = "etat", insert = true)
-    boolean etat;
+    Boolean etat;
+
+    public void setEtat(Boolean etat) {
+        this.etat = etat;
+    }
 
     public void setEtat(boolean etat) {
         this.etat = etat;
     }
 
-    public boolean getEtat() {
+    public Boolean getEtat() {
         return etat;
     }
 
@@ -148,18 +154,29 @@ public class MvtFond {
     }
 
     public List<MvtFond> findById(int id) throws Exception {
-        GenericDao dao = new GenericDao(new UtilDb());
-        MvtFond f = new MvtFond();
-        f.setIdUser(id);
-        List<MvtFond> obj = new ArrayList<>();
-        List<Object> mvt = dao.findAllWithCriteria(f);
-        for (Object mvtFond : mvt) {
-            ((MvtFond) mvtFond).setTypeMvt();
-            ((MvtFond) mvtFond).setMontant();
-
-            obj.add((MvtFond) mvtFond);
+        Connection c=new UtilDb().getConnection();
+        String query = "SELECT * FROM mvt_fond WHERE id_user = ? AND etat = true";
+        List<MvtFond> fonds = new ArrayList<>();
+        try (PreparedStatement stmt = c.prepareStatement(query)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    MvtFond fond = new MvtFond();
+                    fond.setIdMvtFond(rs.getInt("id_mvt_fond"));
+                    fond.setIdUser(rs.getInt("id_user"));
+                    fond.setDepot(rs.getDouble("depot"));
+                    fond.setRetrait(rs.getDouble("retrait"));
+                    fond.setDtMvt(rs.getTimestamp("dt_mvt"));
+                    fond.setEtat(rs.getBoolean("etat"));
+                    fond.setTypeMvt();
+                    fond.setMontant();
+                    fonds.add(fond);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return obj;
+        return fonds;
     }
 
     public List<MvtFond> findAll() throws Exception {
@@ -173,14 +190,28 @@ public class MvtFond {
     }
 
     public MvtFond findByIdMvt(int id) throws Exception {
-        GenericDao dao = new GenericDao(new UtilDb());
-        MvtFond c = new MvtFond();
-        c.setIdMvtFond(id);
-        List<Object> objects = dao.findAllWithCriteria(c);
-        if (objects.isEmpty()) {
-            return null;
+        Connection c=new UtilDb().getConnection();
+        String query = "SELECT * FROM mvt_fond WHERE id_mvt_fond = ?";
+        MvtFond fond = null;
+        try (PreparedStatement stmt = c.prepareStatement(query)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    fond = new MvtFond();
+                    fond.setIdMvtFond(rs.getInt("id_mvt_fond"));
+                    fond.setIdUser(rs.getInt("id_user"));
+                    fond.setDepot(rs.getDouble("depot"));
+                    fond.setRetrait(rs.getDouble("retrait"));
+                    fond.setDtMvt(rs.getTimestamp("dt_mvt"));
+                    fond.setEtat(rs.getBoolean("etat"));
+                    fond.setTypeMvt();
+                    fond.setMontant();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return (MvtFond) objects.get(0);
+        return fond;
     }
 
     public void insert() throws Exception {

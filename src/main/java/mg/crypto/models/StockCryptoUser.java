@@ -56,7 +56,7 @@ public class StockCryptoUser {
         this.qttTotal = qttTotal;
     }
 
-    public int getValeurTotal() {
+    public double getValeurTotal() {
         return valeurTotal;
     }
     public void setValeurTotal(double valeurTotal) {
@@ -80,7 +80,7 @@ public class StockCryptoUser {
                     stockcrypto.setIdCrypto(rs.getInt("id_cryptomonnaie"));
                     stockcrypto.setNomCrypto(rs.getString("nom_crypto"));
                     stockcrypto.setQttTotal(rs.getInt("total_quantite"));
-                    stockCrypto.setValeurTotal(rs.getDouble("total_valeur"));
+                    stockcrypto.setValeurTotal(rs.getDouble("total_valeur"));
                     
                     stockCryptos.add(stockcrypto);
                 }
@@ -102,7 +102,7 @@ public class StockCryptoUser {
             
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    results=rs.getDouble("valeur_total_cryptos");
+                    result=rs.getDouble("valeur_total_cryptos");
                     if (rs.wasNull()) { 
                         result = 0;
                     }

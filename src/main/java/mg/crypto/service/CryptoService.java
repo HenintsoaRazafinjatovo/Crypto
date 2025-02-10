@@ -28,7 +28,7 @@ public class CryptoService {
     public CryptoService() {
     }
 
-    @Scheduled(fixedRate = 10000) // Exécuter toutes les 10 secondes
+    /* @Scheduled(fixedRate = 60000) // Exécuter toutes les 10 secondes
     public void updateCryptoValues() throws Exception {
         Connection c = new UtilDb().getConnection();
         List<Crypto> cryptos = new Crypto().FindAll();
@@ -41,7 +41,7 @@ public class CryptoService {
             System.out.println("Updated " + crypto.getNomCrypto() + " value");
             sendPostRequest(h, crypto);
         }
-    }
+    } */
 
     private void sendPostRequest(HistoCrypto histoCrypto, Crypto crypto) throws Exception {
         URL url = new URL(FIRESTORE_URL);

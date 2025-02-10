@@ -123,7 +123,13 @@
             var row = '<tr>' +
               '<td>' + crypto.nomCrypto + '</td>' +
               '<td>' + crypto.valInitial + '</td>' +
-              '<td><button class="uk-btn uk-btn-primary">Acheter</button></td>' +
+                '<td>' +
+                '<form action="/vente/faireAchat" method="post">' +
+                  '<input type="hidden" name="idCrypto" value="' + crypto.idCrypto + '">' +
+                  '<input type="number" name="qtt" min="1" placeholder="Quantité" required>' +
+                  '<button type="submit" class="uk-btn uk-btn-primary">Acheter</button>' +
+                '</form>' +
+                '</td>' +
               '</tr>';
             tableBody.append(row);
           });

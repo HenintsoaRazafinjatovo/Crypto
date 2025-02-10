@@ -10,6 +10,7 @@ import java.util.List;
 import mg.crypto.connect.GenericDao;
 import mg.crypto.connect.UtilDb;
 import mg.crypto.utils.AnnotationAttribut;
+import mg.crypto.utils.AnnotationClass;
 import mg.crypto.utils.Identite;
 
 // CREATE TABLE Histo_crypto(
@@ -20,12 +21,12 @@ import mg.crypto.utils.Identite;
 //    PRIMARY KEY(Id_Histo_crypto),
 //    FOREIGN KEY(id_cryptomonnaie) REFERENCES cryptomonnaie(id_cryptomonnaie)
 // );
-
+@AnnotationClass(tableName = "histo_crypto")
 public class HistoCrypto {
      @Identite(colName = "id_histo_crypto")
     @AnnotationAttribut(colName = "id_histo_crypto",insert = false)
     int idHistoCrypto;
-    @AnnotationAttribut(colName = "id_crypto",insert =true)
+    @AnnotationAttribut(colName = "id_cryptomonnaie",insert =true)
     int idCrypto;
     @AnnotationAttribut(colName = "date_historique",insert =true)
     Timestamp dateHistorique;

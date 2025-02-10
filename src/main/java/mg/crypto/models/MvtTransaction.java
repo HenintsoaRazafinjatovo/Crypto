@@ -184,7 +184,7 @@ public class MvtTransaction {
         dao.update(this);
     }
 
-    public List<MvtTransaction> findById(int id) throws Exception{
+    /* public List<MvtTransaction> findById(int id) throws Exception{
         GenericDao dao= new GenericDao(new UtilDb());
         MvtTransaction f= new MvtTransaction();
         f.setIdUser(id);
@@ -196,7 +196,7 @@ public class MvtTransaction {
             System.out.println(((MvtTransaction)mvtTrans).getType());
         }
         return obj;
-    }
+    } */
 
     public MvtTransaction findVenteByIdUser(int iduser)throws Exception{
         MvtTransaction transaction = new MvtTransaction();
@@ -204,7 +204,7 @@ public class MvtTransaction {
         String sql = "SELECT *  " +
                 "FROM mvt_transaction " +
                 "WHERE id_user = ? " +
-                "AND isVente = true" +
+                "AND isVente = true " +
                 "ORDER BY date_transaction DESC" +
                 " LIMIT 1" ;
 
@@ -239,7 +239,7 @@ public class MvtTransaction {
         String sql = "SELECT *  " +
                 "FROM mvt_transaction " +
                 "WHERE id_user = ? " +
-                "AND isVente = false" +
+                "AND isVente = false " +
                 "ORDER BY date_transaction DESC" +
                 " LIMIT 1" ;
 

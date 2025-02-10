@@ -11,17 +11,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import jakarta.servlet.http.HttpSession;
 import mg.crypto.models.MvtFond;
 
 @Controller
 public class FondController {
     @GetMapping("/etatFond")
-    public String etatFond (Model model)throws Exception{
+    public String etatFond (HttpSession session,Model model)throws Exception{
         MvtFond mvt = new MvtFond();   
         List<MvtFond> mvtFonds= new ArrayList<>();
+        mvt.setIdUser((int)session.getAttribute("idUser"));
         double fond=mvt.getFondRestant();
-        mvt.setIdUser(0);
-        mvtFonds=mvt.findById(0);
+        mvtFonds=mvt.findById((int)session.getAttribute("idUser"));
         model.addAttribute("lmvt", mvtFonds);
         model.addAttribute("fond",fond);
         return "listeMvt";
@@ -33,13 +34,13 @@ public class FondController {
     }
 
     @PostMapping("/ajoutFond")
-    public String submitAjout (@RequestParam(name = "typemvt") String type,@RequestParam(name = "montantmvt") Double montant,@RequestParam(name = "datemvt") String time )throws Exception{
+    public String submitAjout (HttpSession session,@RequestParam(name = "typemvt") String type,@RequestParam(name = "montantmvt") Double montant,@RequestParam(name = "datemvt") String time )throws Exception{
         
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         LocalDateTime localDateTime = LocalDateTime.parse(time, formatter);
         Timestamp timestamp = Timestamp.valueOf(localDateTime);
         MvtFond mvt = new MvtFond();
-        mvt.setIdUser(0);
+        mvt.setIdUser((int)session.getAttribute("idUser"));
         
         mvt.setDtMvt(timestamp);
         if (type.equals("depot")) {
@@ -50,7 +51,6 @@ public class FondController {
             mvt.setRetrait(montant);
             mvt.setDepot(0);
         }
-        mvt.setEtat(false);
         mvt.insert();
         return "redirect:/ajoutFond";
     }

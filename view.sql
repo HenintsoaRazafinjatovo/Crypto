@@ -15,7 +15,7 @@ case
 	when mf.etat=false then 'Refused'
 	else 'Validated'
 end as etatText
-from mvt_fond mf 
+from mvt_fond mf ;
 
 
 CREATE OR REPLACE VIEW vue_crypto_par_utilisateur AS

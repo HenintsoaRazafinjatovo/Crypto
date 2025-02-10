@@ -1,5 +1,13 @@
 package mg.crypto.models;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
 import mg.crypto.connect.GenericDao;
 import mg.crypto.connect.UtilDb;
 import mg.crypto.utils.AnnotationAttribut;
@@ -57,7 +65,7 @@ public class AnalyseTransactionUser{
         return analyse;
     }
 
-    public AnalyseTransactionUser getValeurTotalTransactionUser(int iduser,Timestamp dtmax){
+    public AnalyseTransactionUser getValeurTotalTransactionUser(int iduser,Timestamp dtmax) throws Exception{
         AnalyseTransactionUser transaction = new AnalyseTransactionUser();
 
         String sql = "SELECT " +
@@ -95,7 +103,7 @@ public class AnalyseTransactionUser{
         return transaction;
     }
 
-    public List<AnalyseTransactionUser> findBeforeDate(Timestamp dtmax) {
+    public List<AnalyseTransactionUser> findBeforeDate(Timestamp dtmax) throws Exception {
         List<AnalyseTransactionUser> results = new ArrayList<>();
         
         String sql = "SELECT " +

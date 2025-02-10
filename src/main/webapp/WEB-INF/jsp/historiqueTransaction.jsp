@@ -1,12 +1,26 @@
+<%@page import="java.util.List"%>
+<%@page import="mg.crypto.models.Crypto"%>
+<%@page import="mg.crypto.models.User"%>
+<%@page import="mg.crypto.models.MvtTransaction"%>
+
+
 <jsp:include page="template/header.jsp" />
+
+<% List<Crypto> cryptos = (List<Crypto>)request.getAttribute("cryptos"); %>
+<% List<User> users = (List<User>)request.getAttribute("users"); %>
+<% List<MvtTransaction> transactions = (List<MvtTransaction>)request.getAttribute("transactions"); %>
+<% Crypto c=new Crypto();%>
 <h1 class="uk-h1">Analyse</h1>
 <br />
-<form class="uk-form-stacked" method="post" action="">
+<form class="uk-form-stacked" method="get" action="/frontOffice/histoTransactionAll">
     <div class="mb-3">
         <label class="uk-form-label" for="form-stacked-select">Select crypto</label>
         <div class="uk-form-controls">
             <select class="uk-select" name="crypto" id="form-stacked-select">
-                <option value="">Option 01</option>
+                <option>Select crypto</option>
+                <% for(Crypto crypto : cryptos) { %>
+                    <option value="<%=crypto.getIdCrypto()%>"><%=crypto.getNomCrypto()%></option>
+                <% } %>
             </select>
         </div>
     </div>
@@ -14,7 +28,10 @@
         <label class="uk-form-label" for="form-stacked-select">Select user</label>
         <div class="uk-form-controls">
             <select class="uk-select" name="user" id="form-stacked-select">
-                <option value="">Option 01</option>
+                <option>Select user</option>
+                <% for(User user : users) { %>
+                    <option value="<%=user.getId()%>"><%=user.getUsername()%></option>
+                <% } %>
             </select>
         </div>
     </div>
@@ -34,22 +51,25 @@
       <th class="uk-width-small"></th>
       <th>id_user</th>
       <td>Cryptomonnaie</td>
-      <th>Total achat</th>
-      <th>Total vente</th>
+      <th>Type transaction</th>
+      <th>Montant</th>
      
     </tr>
   </thead>
   <tbody>
-    <c:forEach var="analyse" items="${fonds}">
+    <% if(transactions != null) {
+        
+    for(MvtTransaction transaction : transactions) { %>
         <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td><a href="/frontOffice/histoTransactionUser?id_user=<%=transaction.getIdUser()%>"></a></td>
+            <td><%=transaction.getIdUser()%></td>
+            <td><%=c.findById(transaction.getIdCrypto()).getNomCrypto()%></td>
+
+            <td><%=transaction.getType() ? "Vente" : "Achat" %></td>
+            <td><%=transaction.getMontant()%></td>
             
         </tr>
-    </c:forEach>
+    <% }} %>
   </tbody>
 </table>
 <jsp:include page="template/footer.jsp" />

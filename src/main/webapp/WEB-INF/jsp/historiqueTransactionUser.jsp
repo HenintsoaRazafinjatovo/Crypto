@@ -4,17 +4,17 @@
     <tr>
       <th class="uk-width-small">id_user</th>
       <th>Cryptomonnaie</th>
-      <th>Total achat</th>
-      <th>Total vente</th>   
+      <th>Type transaction</th>
+      <th>Montant</th>   
     </tr>
   </thead>
   <tbody>
     <c:forEach var="analyse" items="${transactions}">
         <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>   
+            <td><a href="/frontOffice/histoTransactionUser?id_user=${analyse.idUser}">${analyse.idUser}</a></td>
+            <td>${analyse.idCrypto}</td>
+            <td>${analyse.type}</td>
+            <td>${analyse.montant}</td>  
         </tr>
     </c:forEach>
   </tbody>

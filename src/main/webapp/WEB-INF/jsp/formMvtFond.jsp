@@ -12,8 +12,8 @@
         name="typemvt"
         type="number"
       >
-        <option value="1">depot</option>
-        <option value="2">retrait</option>
+        <option value="depot">depot</option>
+        <option value="retrait">retrait</option>
     </select>
 
     </div>

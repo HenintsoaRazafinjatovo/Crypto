@@ -26,7 +26,7 @@ public class CommissionController {
     @GetMapping("/commissionAnalyse")
     public String commissionAnalyse (Model model)throws Exception{
         List<Crypto> cryptos= new ArrayList<>();
-        cryptos= new Crypto().findAll();
+        cryptos= new Crypto().FindAll();
         model.addAttribute("cryptos", cryptos);
         return "filtrecommissionAnalyse";
     }

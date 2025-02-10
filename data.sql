@@ -10,6 +10,8 @@ INSERT INTO cryptomonnaie (nom_crypto, val_initial) VALUES
 ('Chainlink', 25.00),
 ('Stellar', 0.80);
 
+INSERT INTO admin (nom, pwd) VALUES ('admin', MD5('admin'));
+
 INSERT INTO utilisateur (email, mot_de_passe, telephoneUser, username) 
 VALUES ('user1@example.com', 'user1', '0123456789', 'user1');
 

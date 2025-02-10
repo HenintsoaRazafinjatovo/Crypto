@@ -17,6 +17,8 @@
             <input type="submit" value="Login">
         </form>
         <p>Don't have an account? <a href="/inscription">Register here</a></p>
+        <p>Or you are admin? <a href="/login/admin">Heree</a></p>
+
     </div>
 
     <script>

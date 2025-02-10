@@ -363,7 +363,9 @@ public class MvtTransaction {
         //colonnes
         
         fields.set("id_user",createIntegerField(this.getIdUser()));
-        fields.set("message",createStringField(message));
+        fields.set("texte",createStringField(message));
+        fields.set("wasFetched", createBooleanField(false));
+
      
 
         ObjectNode body = objectMapper.createObjectNode();

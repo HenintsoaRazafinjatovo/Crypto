@@ -12,7 +12,7 @@
 <h1 class="uk-h1">Analyse</h1>
 <br />
 <form class="uk-form-stacked" method="get" action="/frontOffice/histoFondAll">
-    <div class="mb-3">
+    <%-- <div class="mb-3">
         <label class="uk-form-label" for="form-stacked-select">Select user</label>
         <div class="uk-form-controls">
             <select class="uk-select" name="user" id="form-stacked-select">
@@ -22,7 +22,7 @@
                 <% } %>
             </select>
         </div>
-    </div>
+    </div> --%>
     <div class="mb-3">
         <label class="uk-form-label" for="form-stacked-select">Date</label>
         <div class="uk-form-controls">
@@ -49,7 +49,7 @@
     <% if(fonds != null) { 
     for(MvtFond fond : fonds) { %>
         <tr>
-            <td><a href="/frontOffice/histoFondUser?id_user=<%=fond.getIdUser()%>"></a></td>
+            <td><a href="/frontOffice/histoFondByUser?idUser=<%=fond.getIdUser()%>">👨</a></td>
 
             <td><%= fond.getIdUser()%></td>
             <td><%= fond.getDepot()%></td>

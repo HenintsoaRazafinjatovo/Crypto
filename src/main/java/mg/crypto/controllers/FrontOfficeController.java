@@ -48,7 +48,7 @@ public String histoTransactionAll(@RequestParam(name = "datemvt",required = fals
     
     return "historiqueTransaction";
 }
-@PostMapping("/histoTransactionByUser")
+@GetMapping("/histoTransactionByUser")
 public String histoTransactionByUser(@RequestParam("idUser") int idUser, @RequestParam("date") String dateStr, Model model) throws Exception {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     LocalDateTime localDateTime = LocalDateTime.parse(dateStr, formatter);
@@ -60,7 +60,7 @@ public String histoTransactionByUser(@RequestParam("idUser") int idUser, @Reques
     return "historiqueTransactionUser";
 }
 
-@PostMapping("/histoTransactionByCrypto")
+@GetMapping("/histoTransactionByCrypto")
 public String histoTransactionByCrypto(@RequestParam("idCrypto") int idCrypto, @RequestParam("date") String dateStr, Model model) throws Exception {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     LocalDateTime localDateTime = LocalDateTime.parse(dateStr, formatter);
@@ -92,11 +92,9 @@ public String histoFondAll(@RequestParam(name = "datemvt",required = false) Stri
     return "historiqueFond";
 }
 
-@PostMapping("/histoFondByUser")
-public String histoFondByUser(@RequestParam("idUser") int idUser, @RequestParam("date") String dateStr, Model model) throws Exception {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    LocalDateTime localDateTime = LocalDateTime.parse(dateStr, formatter);
-    Timestamp date = Timestamp.valueOf(localDateTime);
+@GetMapping("/histoFondByUser")
+public String histoFondByUser(@RequestParam("idUser") int idUser, Model model) throws Exception {
+    Timestamp date = Timestamp.valueOf(LocalDateTime.now());
 
     MvtFond mvtFond = new MvtFond();
     List<MvtFond> fonds = mvtFond.getFondsByUserAndDate(idUser, date);

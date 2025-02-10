@@ -1,4 +1,10 @@
+<%@page import="mg.crypto.models.User"%>
+<%@page import="mg.crypto.models.MvtFond"%>
+<%@page import="java.util.List"%>
+
 <jsp:include page="template/header.jsp" />
+<% List<MvtFond> fonds = (List<MvtFond>)request.getAttribute("fonds"); %>
+
 <table class="uk-table uk-table-middle uk-table-divider">
   <thead>
     <tr>
@@ -10,14 +16,18 @@
     </tr>
   </thead>
   <tbody>
-    <c:forEach var="analyse" items="${fonds}">
+    <% 
+    for(MvtFond fond : fonds) { %>
         <tr>
-            <td>${analyse.idUser}</td>
-            <td>${analyse.depot}</td>
-            <td>${analyse.retrait}</td>
-            <td>${analyse.datemvt}</td>    
+            <td><a href="/frontOffice/histoFondByUser?idUser=<%=fond.getIdUser()%>"></a></td>
+
+            <td><%= fond.getIdUser()%></td>
+            <td><%= fond.getDepot()%></td>
+            <td><%= fond.getRetrait()%></td>
+            <td><%= fond.getDtMvt()%></td>   
         </tr>
-    </c:forEach>
+    <%  }%>
+
   </tbody>
 </table>
 <jsp:include page="template/footer.jsp" />
